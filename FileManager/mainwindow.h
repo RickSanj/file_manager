@@ -36,11 +36,14 @@ private slots:
     void handleDeleteTriggered();
     void renameItem();
     void handleOpenActionTriggered();
-
+    void onCopyTriggered();
+    void onPasteTriggered();
+    bool copyDirectory(QDir sourceDir, QDir targetDir);
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *model;
     QModelIndex currentIndex;
+    QString copyPath;
 };
 
 #endif // MAINWINDOW_H
