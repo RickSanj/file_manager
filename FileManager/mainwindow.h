@@ -46,5 +46,39 @@ private:
     QString copyPath;
 };
 
+class CustomFileSystemModel : public QFileSystemModel {
+    Q_OBJECT
+
+public:
+    explicit CustomFileSystemModel(QObject *parent = nullptr) : QFileSystemModel(parent) {}
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override {
+        int count = QFileSystemModel::rowCount(parent);
+        if (!parent.isValid() || !fileInfo(parent).isDir()) {
+            return count;
+        }
+        return count + 1;
+    }
+
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {
+        if (index.row() == 0 && index.parent() == QModelIndex() && role == Qt::DisplayRole) {
+            return QStringLiteral("../");
+        }
+        return QFileSystemModel::data(this->index(index.row()-1, index.column(), index.parent()), role);
+    }
+
+    // Override index to handle "../" row click
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override {
+        if (row == 0 && parent == QModelIndex()) {
+            return createIndex(row, column);
+        }
+        return QFileSystemModel::index(row, column, parent);
+    }
+
+    bool isUpDirectory(const QModelIndex &index) const {
+        return index.row() == 0 && index.parent() == QModelIndex();
+    }
+};
+
 #endif // MAINWINDOW_H
 

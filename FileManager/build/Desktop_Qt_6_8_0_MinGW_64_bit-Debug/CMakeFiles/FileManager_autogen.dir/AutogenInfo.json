@@ -1,17 +1,17 @@
 {
 	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
-	"BUILD_DIR" : "C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen",
-	"CMAKE_BINARY_DIR" : "C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug",
-	"CMAKE_CURRENT_BINARY_DIR" : "C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug",
-	"CMAKE_CURRENT_SOURCE_DIR" : "C:/Users/Elena/Documents/filesAnya/FileManager",
+	"BUILD_DIR" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen",
+	"CMAKE_BINARY_DIR" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug",
+	"CMAKE_CURRENT_SOURCE_DIR" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager",
 	"CMAKE_EXECUTABLE" : "C:/Qt/Tools/CMake_64/bin/cmake.exe",
 	"CMAKE_LIST_FILES" : 
 	[
-		"C:/Users/Elena/Documents/filesAnya/FileManager/CMakeLists.txt",
-		"C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/.qtc/package-manager/auto-setup.cmake",
+		"C:/Users/Elena/Documents/os_project/file_manager/FileManager/CMakeLists.txt",
+		"C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/.qtc/package-manager/auto-setup.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeDetermineSystem.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeSystem.cmake.in",
-		"C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeSystem.cmake",
+		"C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeSystem.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeNinjaFindMake.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake",
@@ -65,7 +65,7 @@
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindBinUtils.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/GNU-FindBinUtils.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCXXCompiler.cmake.in",
-		"C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeCXXCompiler.cmake",
+		"C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeCXXCompiler.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeGenericSystem.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake",
@@ -80,7 +80,7 @@
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-GNU.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeDetermineRCCompiler.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeRCCompiler.cmake.in",
-		"C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeRCCompiler.cmake",
+		"C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeRCCompiler.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeRCInformation.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-windres.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeTestRCCompiler.cmake",
@@ -97,7 +97,7 @@
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeDetermineCompileFeatures.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Internal/FeatureTesting.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCXXCompiler.cmake.in",
-		"C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeCXXCompiler.cmake",
+		"C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeCXXCompiler.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX-ABI.cmake",
 		"C:/Qt/6.8.0/mingw_64/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
 		"C:/Qt/6.8.0/mingw_64/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
@@ -358,22 +358,22 @@
 		"C:/Qt/6.8.0/mingw_64/lib/cmake/Qt6Widgets/Qt6WidgetsVersionlessAliasTargets.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/GNUInstallDirs.cmake"
 	],
-	"CMAKE_SOURCE_DIR" : "C:/Users/Elena/Documents/filesAnya/FileManager",
+	"CMAKE_SOURCE_DIR" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager",
 	"CROSS_CONFIG" : false,
-	"DEP_FILE" : "C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/deps",
+	"DEP_FILE" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/deps",
 	"DEP_FILE_RULE_NAME" : "FileManager_autogen/timestamp",
 	"HEADERS" : 
 	[
 		[
-			"C:/Users/Elena/Documents/filesAnya/FileManager/mainwindow.h",
+			"C:/Users/Elena/Documents/os_project/file_manager/FileManager/mainwindow.h",
 			"MU",
 			"EWIEGA46WW/moc_mainwindow.cpp",
 			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
-	"INCLUDE_DIR" : "C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/include",
-	"MOC_COMPILATION_FILE" : "C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/mocs_compilation.cpp",
+	"INCLUDE_DIR" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/include",
+	"MOC_COMPILATION_FILE" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/mocs_compilation.cpp",
 	"MOC_DEFINITIONS" : 
 	[
 		"MINGW_HAS_SECURE_API=1",
@@ -429,22 +429,26 @@
 		"-c",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCXXCompilerABI.cpp"
 	],
-	"MOC_PREDEFS_FILE" : "C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/moc_predefs.h",
+	"MOC_PREDEFS_FILE" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/moc_predefs.h",
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
 	"PARALLEL" : 4,
-	"PARSE_CACHE_FILE" : "C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/FileManager_autogen.dir/ParseCache.txt",
+	"PARSE_CACHE_FILE" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/FileManager_autogen.dir/ParseCache.txt",
 	"QT_MOC_EXECUTABLE" : "C:/Qt/6.8.0/mingw_64/bin/moc.exe",
 	"QT_UIC_EXECUTABLE" : "C:/Qt/6.8.0/mingw_64/bin/uic.exe",
 	"QT_VERSION_MAJOR" : 6,
 	"QT_VERSION_MINOR" : 8,
-	"SETTINGS_FILE" : "C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/FileManager_autogen.dir/AutogenUsed.txt",
+	"SETTINGS_FILE" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/FileManager_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
-		[ "C:/Users/Elena/Documents/filesAnya/FileManager/main.cpp", "MU", null ],
 		[
-			"C:/Users/Elena/Documents/filesAnya/FileManager/mainwindow.cpp",
+			"C:/Users/Elena/Documents/os_project/file_manager/FileManager/main.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Elena/Documents/os_project/file_manager/FileManager/mainwindow.cpp",
 			"MU",
 			null
 		]

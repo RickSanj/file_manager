@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow){
@@ -61,12 +62,18 @@ void MainWindow::on_lineEdit_returnPressed(){
 
 void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index)
 {
-    QString path = model->filePath(index);
-    QFileInfo fileInfo(path);
 
-    if (fileInfo.isFile()) {
-        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-    }
+        QString path = model->filePath(index);
+        QFileInfo fileInfo(path);
+
+        if (fileInfo.isDir()) {
+            ui->treeView->setRootIndex(index);
+            ui->lineEdit->setText(path);
+        }
+        else if (fileInfo.isFile()) {
+            QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+        }
+
 
 }
 

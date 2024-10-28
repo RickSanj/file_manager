@@ -1,5 +1,5 @@
-C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/EWIEGA46WW/moc_mainwindow.cpp: C:/Users/Elena/Documents/filesAnya/FileManager/mainwindow.h \
-  C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/moc_predefs.h \
+C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/EWIEGA46WW/moc_mainwindow.cpp: C:/Users/Elena/Documents/os_project/file_manager/FileManager/mainwindow.h \
+  C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/moc_predefs.h \
   C:/Qt/6.8.0/mingw_64/include/QtCore/QDir \
   C:/Qt/6.8.0/mingw_64/include/QtCore/QFile \
   C:/Qt/6.8.0/mingw_64/include/QtCore/QFileInfo \

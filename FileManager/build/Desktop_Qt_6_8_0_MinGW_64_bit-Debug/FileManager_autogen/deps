@@ -683,14 +683,14 @@ FileManager_autogen/timestamp: \
 	C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/vadefs.h \
 	C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h \
 	C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wctype.h \
-	C:/Users/Elena/Documents/filesAnya/FileManager/CMakeLists.txt \
-	C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/.qtc/package-manager/auto-setup.cmake \
-	C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeCXXCompiler.cmake \
-	C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeRCCompiler.cmake \
-	C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeSystem.cmake \
-	C:/Users/Elena/Documents/filesAnya/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/moc_predefs.h \
-	C:/Users/Elena/Documents/filesAnya/FileManager/main.cpp \
-	C:/Users/Elena/Documents/filesAnya/FileManager/mainwindow.cpp \
-	C:/Users/Elena/Documents/filesAnya/FileManager/mainwindow.h \
-	C:/Users/Elena/Documents/filesAnya/FileManager/mainwindow.ui \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/CMakeLists.txt \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/.qtc/package-manager/auto-setup.cmake \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeCXXCompiler.cmake \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeRCCompiler.cmake \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeSystem.cmake \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/moc_predefs.h \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/main.cpp \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/mainwindow.cpp \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/mainwindow.h \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/mainwindow.ui \
 	C:/Qt/Tools/CMake_64/bin/cmake.exe
