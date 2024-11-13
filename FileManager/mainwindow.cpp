@@ -22,8 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
-    connect(ui->buttonParentDir, &QPushButton::clicked, this, &MainWindow::onGoToParentDirClicked);
-
 }
 
 
@@ -311,20 +309,6 @@ void MainWindow::onEscPressed() {
         }
     }
 }
-
-
-void MainWindow::onGoToParentDirClicked() {
-    QModelIndex currentRootIndex = ui->treeView->rootIndex();
-    QModelIndex parentIndex = currentRootIndex.parent();
-    if (parentIndex.isValid()) {
-        QString parentPath = model->filePath(parentIndex);
-        ui->treeView->setRootIndex(parentIndex);
-        ui->lineEdit->setText(parentPath);
-    } else {
-        QMessageBox::information(this, "Parent Directory", "Already at the root directory.");
-    }
-}
-
 
 
 MainWindow::~MainWindow(){
