@@ -265,11 +265,17 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
     if (object == ui->treeView && event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
-        // Check if Enter key was pressed
+
         if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
-            onEnterPressed(); // Call your function
+            onEnterPressed();
+            return true;
+        }
+
+        if (keyEvent->key() == Qt::Key_Escape) {
+            onEscPressed(); // Call function to go to parent directory
             return true; // Indicate that the event was handled
         }
+
     }
     // Standard event processing
     return QMainWindow::eventFilter(object, event);
@@ -288,6 +294,23 @@ void MainWindow::onEnterPressed() {
             } else if (fileInfo.isFile()) {
                 QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
             }
+        }
+    }
+}
+
+void MainWindow::onEscPressed() {
+    QModelIndex currentRootIndex = ui->treeView->rootIndex();
+
+    QModelIndex parentIndex = currentRootIndex.parent();
+    if (parentIndex.isValid()) {
+
+        QFileInfo fileInfo = model->fileInfo(parentIndex);
+
+        if (fileInfo.isDir()) {
+            ui->treeView->setRootIndex(model->index(fileInfo.absoluteFilePath()));
+            ui->lineEdit->setText(fileInfo.absoluteFilePath());
+        } else if (fileInfo.isFile()) {
+            QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
         }
     }
 }

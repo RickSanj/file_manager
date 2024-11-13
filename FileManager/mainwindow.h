@@ -42,6 +42,7 @@ private slots:
     bool copyDirectory(QDir sourceDir, QDir targetDir);
     bool eventFilter(QObject *object, QEvent *event);
     void onEnterPressed();
+    void onEscPressed();
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *model;
