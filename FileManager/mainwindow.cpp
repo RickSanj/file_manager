@@ -75,9 +75,6 @@ void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index){
 void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
     currentIndex = ui->treeView->indexAt(pos);
 
-    if (!currentIndex.isValid()) {
-        return;
-    }
 
     QMenu contextMenu(this);
 
@@ -87,20 +84,27 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
         QAction *openAction = contextMenu.addAction("Open");
         connect(openAction, &QAction::triggered, this, &MainWindow::handleOpenActionTriggered);
     }
+
+
     QAction *copyAction = contextMenu.addAction("Copy");
     QAction *pasteAction = contextMenu.addAction("Paste");
     QAction *deleteAction = contextMenu.addAction("Delete");
-    connect(deleteAction, &QAction::triggered, this, &MainWindow::handleDeleteTriggered);
-
-
     QAction *renameAction = contextMenu.addAction("Rename");
-    connect(renameAction, &QAction::triggered, this, &MainWindow::renameItem);
 
-    if (copyPath.isEmpty()) {
-        pasteAction->setDisabled(true);
-    }
+    connect(deleteAction, &QAction::triggered, this, &MainWindow::handleDeleteTriggered);
+    connect(renameAction, &QAction::triggered, this, &MainWindow::renameItem);    
     connect(copyAction, &QAction::triggered, this, &MainWindow::onCopyTriggered);
     connect(pasteAction, &QAction::triggered, this, &MainWindow::onPasteTriggered);
+
+    if (copyPath.isEmpty()){
+        pasteAction->setDisabled(true);
+    }
+
+    if (!currentIndex.isValid()) {
+        copyAction->setDisabled(true);
+        deleteAction->setDisabled(true);
+        renameAction->setDisabled(true);
+    }
 
     contextMenu.exec(ui->treeView->viewport()->mapToGlobal(pos));
 }
@@ -185,24 +189,16 @@ void MainWindow::onCopyTriggered(){
 
 
 void MainWindow::onPasteTriggered() {
-    if (copyPath.isEmpty()) {
-        QMessageBox::warning(this, "Paste", "No file or directory to paste.");
-        return;
-    }
-
     QString destinationPath = model->filePath(currentIndex);
     QFileInfo destInfo(destinationPath);
 
     if (!destInfo.isDir()) {
-        QMessageBox::warning(this, "Paste", "Please select a valid folder to paste into.");
-        return;
+        destinationPath = model->filePath(ui->treeView->rootIndex());
     }
 
-    // Get the file name from the source and create a new path in the destination folder
     QFileInfo sourceInfo(copyPath);
     QString newFilePath = destinationPath + "/" + sourceInfo.fileName();
 
-    // Check if the file already exists in the destination
     if (QFile::exists(newFilePath)) {
         QMessageBox::StandardButton reply = QMessageBox::question(
             this, "Overwrite File", "The file already exists. Do you want to overwrite it?",
@@ -210,24 +206,22 @@ void MainWindow::onPasteTriggered() {
             );
 
         if (reply == QMessageBox::No) {
-            return;  // Abort paste operation if user chooses not to overwrite
+            return;
         }
     }
 
     if (sourceInfo.isFile()) {
-        // Copy the file
-        if (QFile::copy(copyPath, newFilePath)) {
-            QMessageBox::information(this, "Paste", "File pasted successfully.");
-        } else {
+        if (!QFile::copy(copyPath, newFilePath)) {
             QMessageBox::warning(this, "Paste", "Failed to paste the file.");
         }
     } else if (sourceInfo.isDir()) {
-        // Copy directory recursively
         QDir sourceDir(copyPath);
         QDir targetDir(destinationPath);
-        if (copyDirectory(sourceDir, targetDir)) {
-            QMessageBox::information(this, "Paste", "Directory pasted successfully.");
-        } else {
+
+        QString targetPathWithSourceDir = targetDir.filePath(sourceDir.dirName());
+        QDir newTargetDir(targetPathWithSourceDir);
+
+        if (!copyDirectory(sourceDir, newTargetDir)) {
             QMessageBox::warning(this, "Paste", "Failed to paste the directory.");
         }
     }
