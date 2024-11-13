@@ -43,6 +43,7 @@ private slots:
     bool eventFilter(QObject *object, QEvent *event);
     void onEnterPressed();
     void onEscPressed();
+    void onGoToParentDirClicked();
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *model;
