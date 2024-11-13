@@ -135,29 +135,28 @@ void MainWindow::renameItem(){
 
 void MainWindow::handleDeleteTriggered(){
     QString path = model->filePath(currentIndex);
-    QFileInfo fileInfo(path);
-
+    QModelIndex selectedIndex = ui->treeView->currentIndex();
     if (path.isEmpty()) {
-        QMessageBox::warning(this, "Delete", "No file or directory selected.");
-        return;
+        if(!selectedIndex.isValid()){
+            QMessageBox::warning(this, "Delete", "No file or directory selected.");
+            return;
+        } else {
+            path = model->filePath(selectedIndex);
+        }
     }
-
+    QFileInfo fileInfo(path);
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Delete", "Are you sure you want to delete this?",
                                   QMessageBox::Yes | QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
         if (fileInfo.isFile()) {
-            if (QFile::remove(path)) {
-                QMessageBox::information(this, "Delete", "File deleted successfully.");
-            } else {
+            if (!QFile::remove(path)) {
                 QMessageBox::warning(this, "Delete", "Failed to delete file.");
             }
         } else if (fileInfo.isDir()) {
             QDir dir(path);
-            if (dir.removeRecursively()) {
-                QMessageBox::information(this, "Delete", "Directory deleted successfully.");
-            } else {
+            if (!dir.removeRecursively()) {
                 QMessageBox::warning(this, "Delete", "Failed to delete directory.");
             }
         }
@@ -225,7 +224,6 @@ void MainWindow::onPasteTriggered() {
             QMessageBox::warning(this, "Paste", "Failed to paste the directory.");
         }
     }
-    copyPath.clear();
 }
 
 
@@ -268,6 +266,11 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
         if (keyEvent->key() == Qt::Key_Escape) {
             onEscPressed(); // Call function to go to parent directory
             return true; // Indicate that the event was handled
+        }
+
+        if (keyEvent->key() == Qt::Key_Delete) {
+            handleDeleteTriggered();
+            return true;
         }
 
     }
