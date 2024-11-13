@@ -177,10 +177,15 @@ void MainWindow::handleOpenActionTriggered(){
 void MainWindow::onCopyTriggered(){
     QString sourcePath = model->filePath(currentIndex);
     QFileInfo fileInfo(sourcePath);
+    QModelIndex selectedIndex = ui->treeView->currentIndex();
 
     if (!fileInfo.exists()) {
-        QMessageBox::warning(this, "Copy", "No file or directory selected.");
-        return;
+        if(!selectedIndex.isValid()){
+            QMessageBox::warning(this, "Copy", "No file or directory selected.");
+            return;
+        } else {
+            sourcePath = model->filePath(selectedIndex);;
+        }
     }
 
     copyPath = sourcePath;
@@ -264,12 +269,20 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
         }
 
         if (keyEvent->key() == Qt::Key_Escape) {
-            onEscPressed(); // Call function to go to parent directory
-            return true; // Indicate that the event was handled
+            onEscPressed();
+            return true;
         }
 
         if (keyEvent->key() == Qt::Key_Delete) {
             handleDeleteTriggered();
+            return true;
+        }
+        if (keyEvent->key() == Qt::Key_C && keyEvent->modifiers() == Qt::ControlModifier) {
+            onCopyTriggered();
+            return true;
+        }
+        if (keyEvent->key() == Qt::Key_V && keyEvent->modifiers() == Qt::ControlModifier) {
+            onPasteTriggered();
             return true;
         }
 
