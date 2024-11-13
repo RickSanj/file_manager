@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     model->setRootPath(QDir::rootPath());
     ui->treeView->setModel(model);
     ui->treeView->setRootIndex(model->index(QDir::rootPath()));
+    ui->treeView->setItemsExpandable(false);
+    ui->treeView->setRootIsDecorated(false);
     ui->lineEdit->setText(QDir::rootPath());
 
     connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::handleTreeViewDoubleClicked);
@@ -21,10 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
 
-}
 
-MainWindow::~MainWindow(){
-    delete ui;
 }
 
 void MainWindow::on_pushButton_clicked(){
@@ -273,5 +272,11 @@ bool MainWindow::copyDirectory(QDir sourceDir, QDir targetDir)
     }
 
     return true;
+
 }
+
+MainWindow::~MainWindow(){
+    delete ui;
+}
+
 
