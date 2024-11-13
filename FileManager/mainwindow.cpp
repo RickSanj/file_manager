@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-
-
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -23,8 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
 
-
 }
+
 
 void MainWindow::on_pushButton_clicked(){
     QString path = ui->lineEdit->text();
@@ -59,26 +58,22 @@ void MainWindow::on_lineEdit_returnPressed(){
 }
 
 
-void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index)
-{
-
+void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index){
         QString path = model->filePath(index);
+        std::cout << "Double clicked func " << path.toStdString() << std::endl;
+
         QFileInfo fileInfo(path);
 
         if (fileInfo.isDir()) {
-            ui->treeView->setRootIndex(index);
+            ui->treeView->setRootIndex(model->index(path));
             ui->lineEdit->setText(path);
-        }
-        else if (fileInfo.isFile()) {
+        } else if (fileInfo.isFile()) {
             QDesktopServices::openUrl(QUrl::fromLocalFile(path));
         }
-
-
 }
 
 
-void MainWindow::handleCustomContextMenuRequested(const QPoint &pos)
-{
+void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
     currentIndex = ui->treeView->indexAt(pos);
 
     if (!currentIndex.isValid()) {
@@ -112,8 +107,7 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos)
 }
 
 
-void MainWindow::renameItem()
-{
+void MainWindow::renameItem(){
     QModelIndex index = ui->treeView->currentIndex();
 
     if (!index.isValid()) {
@@ -126,8 +120,6 @@ void MainWindow::renameItem()
     bool ok;
     QString newName = QInputDialog::getText(this, "Rename", "Enter new name:", QLineEdit::Normal, oldName, &ok);
 
-
-
     if (!ok || newName.isEmpty()) {
         QMessageBox::warning(this, "Rename Error", "Failed to rename file or folder.");
     }
@@ -135,9 +127,6 @@ void MainWindow::renameItem()
         QString newFilePath = fileInfo.absolutePath() + "/" + newName;
         QFile::rename(oldFilePath, newFilePath);
     }
-
-
-
 }
 
 
@@ -173,8 +162,7 @@ void MainWindow::handleDeleteTriggered(){
 }
 
 
-void MainWindow::handleOpenActionTriggered()
-{
+void MainWindow::handleOpenActionTriggered(){
     QModelIndex index = currentIndex;
     if (!index.isValid()) {
         QMessageBox::warning(this, "Open", "No file or directory selected.");
@@ -182,6 +170,7 @@ void MainWindow::handleOpenActionTriggered()
     }
     handleTreeViewDoubleClicked(index);
 }
+
 
 void MainWindow::onCopyTriggered(){
     QString sourcePath = model->filePath(currentIndex);
@@ -194,6 +183,7 @@ void MainWindow::onCopyTriggered(){
 
     copyPath = sourcePath;
 }
+
 
 void MainWindow::onPasteTriggered() {
     if (copyPath.isEmpty()) {
@@ -242,13 +232,11 @@ void MainWindow::onPasteTriggered() {
             QMessageBox::warning(this, "Paste", "Failed to paste the directory.");
         }
     }
-
-    // Clear the copy path after pasting
     copyPath.clear();
 }
 
-bool MainWindow::copyDirectory(QDir sourceDir, QDir targetDir)
-{
+
+bool MainWindow::copyDirectory(QDir sourceDir, QDir targetDir){
     if (!targetDir.exists()) {
         targetDir.mkdir(targetDir.path());
     }
@@ -272,11 +260,9 @@ bool MainWindow::copyDirectory(QDir sourceDir, QDir targetDir)
     }
 
     return true;
-
 }
+
 
 MainWindow::~MainWindow(){
     delete ui;
 }
-
-
