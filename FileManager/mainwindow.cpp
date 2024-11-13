@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     ui->label_2->setText("Current directory: ");
+    ui->treeView->installEventFilter(this);
 
     model = new QFileSystemModel(this);
     model->setRootPath(QDir::rootPath());
@@ -21,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
-
 }
 
 
@@ -60,7 +60,6 @@ void MainWindow::on_lineEdit_returnPressed(){
 
 void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index){
         QString path = model->filePath(index);
-        std::cout << "Double clicked func " << path.toStdString() << std::endl;
 
         QFileInfo fileInfo(path);
 
@@ -260,6 +259,37 @@ bool MainWindow::copyDirectory(QDir sourceDir, QDir targetDir){
     }
 
     return true;
+}
+
+bool MainWindow::eventFilter(QObject *object, QEvent *event) {
+    if (object == ui->treeView && event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+
+        // Check if Enter key was pressed
+        if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
+            onEnterPressed(); // Call your function
+            return true; // Indicate that the event was handled
+        }
+    }
+    // Standard event processing
+    return QMainWindow::eventFilter(object, event);
+}
+
+
+void MainWindow::onEnterPressed() {
+    if (ui->treeView->hasFocus()) {
+        QModelIndex selectedIndex = ui->treeView->currentIndex();
+        if (selectedIndex.isValid()) {
+            QFileInfo fileInfo = model->fileInfo(selectedIndex);
+
+            if (fileInfo.isDir()) {
+                ui->treeView->setRootIndex(model->index(fileInfo.absoluteFilePath()));
+                ui->lineEdit->setText(fileInfo.absoluteFilePath());
+            } else if (fileInfo.isFile()) {
+                QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
+            }
+        }
+    }
 }
 
 

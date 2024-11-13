@@ -13,6 +13,7 @@
 #include <QMessageBox>
 #include <QAction>
 #include <QInputDialog>
+#include <QKeyEvent>
 
 
 QT_BEGIN_NAMESPACE
@@ -39,6 +40,8 @@ private slots:
     void onCopyTriggered();
     void onPasteTriggered();
     bool copyDirectory(QDir sourceDir, QDir targetDir);
+    bool eventFilter(QObject *object, QEvent *event);
+    void onEnterPressed();
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *model;
