@@ -8,6 +8,7 @@ C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_
   C:/Qt/6.8.0/mingw_64/include/QtCore/QRect \
   C:/Qt/6.8.0/mingw_64/include/QtCore/QSize \
   C:/Qt/6.8.0/mingw_64/include/QtCore/QSizeF \
+  C:/Qt/6.8.0/mingw_64/include/QtCore/QTranslator \
   C:/Qt/6.8.0/mingw_64/include/QtCore/QUrl \
   C:/Qt/6.8.0/mingw_64/include/QtCore/q20functional.h \
   C:/Qt/6.8.0/mingw_64/include/QtCore/q20iterator.h \
@@ -136,6 +137,7 @@ C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_
   C:/Qt/6.8.0/mingw_64/include/QtCore/qtmetamacros.h \
   C:/Qt/6.8.0/mingw_64/include/QtCore/qtnoop.h \
   C:/Qt/6.8.0/mingw_64/include/QtCore/qtpreprocessorsupport.h \
+  C:/Qt/6.8.0/mingw_64/include/QtCore/qtranslator.h \
   C:/Qt/6.8.0/mingw_64/include/QtCore/qtresource.h \
   C:/Qt/6.8.0/mingw_64/include/QtCore/qttranslation.h \
   C:/Qt/6.8.0/mingw_64/include/QtCore/qttypetraits.h \

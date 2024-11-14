@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-f8ea29db810d2d6262ea.json",
+					"jsonFile" : "directory-.-Debug-8d807f7aeab6b896d327.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -18,7 +18,8 @@
 					[
 						0,
 						1,
-						2
+						2,
+						3
 					]
 				}
 			],
@@ -35,7 +36,8 @@
 					[
 						0,
 						1,
-						2
+						2,
+						3
 					]
 				}
 			],
@@ -44,7 +46,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "FileManager::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-FileManager-Debug-62494a1e17a7b88f9314.json",
+					"jsonFile" : "target-FileManager-Debug-f5c880b61fd34796078f.json",
 					"name" : "FileManager",
 					"projectIndex" : 0
 				},
@@ -60,6 +62,13 @@
 					"id" : "FileManager_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
 					"jsonFile" : "target-FileManager_autogen_timestamp_deps-Debug-2fa3837afc5d554122d0.json",
 					"name" : "FileManager_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "translations::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-translations-Debug-2a8c138712796e6222bd.json",
+					"name" : "translations",
 					"projectIndex" : 0
 				}
 			]

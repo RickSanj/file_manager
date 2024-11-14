@@ -23,13 +23,14 @@
 //     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
 //     connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
 // }
+QTranslator translator;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->label_2->setText("Current directory: ");
+    ui->langButton->setText("ENG");
     ui->treeViewLeft->installEventFilter(this);
     treeViewLeft = ui->treeViewLeft;
     treeViewRight = ui->treeViewRight;
@@ -75,7 +76,7 @@ void MainWindow::on_pushButton_clicked(){
 
 
 void MainWindow::handleSelectPathButtonClicked(){
-    QString folderPath = QFileDialog::getExistingDirectory(this, "Select Folder", QDir::homePath());
+    QString folderPath = QFileDialog::getExistingDirectory(this, tr("Select Folder"), QDir::homePath());
     if (!folderPath.isEmpty()) {
         modelLeft->setRootPath(folderPath);
         ui->treeViewLeft->setModel(modelLeft);
@@ -119,15 +120,15 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
     QFileInfo fileInfo = modelLeft->fileInfo(currentIndex);
 
     if (fileInfo.isFile()) {
-        QAction *openAction = contextMenu.addAction("Open");
+        QAction *openAction = contextMenu.addAction(tr("Open"));
         connect(openAction, &QAction::triggered, this, &MainWindow::handleOpenActionTriggered);
     }
 
 
-    QAction *copyAction = contextMenu.addAction("Copy");
-    QAction *pasteAction = contextMenu.addAction("Paste");
-    QAction *deleteAction = contextMenu.addAction("Delete");
-    QAction *renameAction = contextMenu.addAction("Rename");
+    QAction *copyAction = contextMenu.addAction(tr("Copy"));
+    QAction *pasteAction = contextMenu.addAction(tr("Paste"));
+    QAction *deleteAction = contextMenu.addAction(tr("Delete"));
+    QAction *renameAction = contextMenu.addAction(tr("Rename"));
 
     connect(deleteAction, &QAction::triggered, this, &MainWindow::handleDeleteTriggered);
     connect(renameAction, &QAction::triggered, this, &MainWindow::renameItem);    
@@ -159,10 +160,10 @@ void MainWindow::renameItem(){
     QString oldFilePath = modelLeft->filePath(index);
     QFileInfo fileInfo(oldFilePath);
     bool ok;
-    QString newName = QInputDialog::getText(this, "Rename", "Enter new name:", QLineEdit::Normal, oldName, &ok);
+    QString newName = QInputDialog::getText(this, tr("Rename"), tr("Enter new name:"), QLineEdit::Normal, oldName, &ok);
 
     if (!ok || newName.isEmpty()) {
-        QMessageBox::warning(this, "Rename Error", "Failed to rename file or folder.");
+        QMessageBox::warning(this, tr("Rename Error"), tr("Failed to rename file or folder."));
     }
     else {
         QString newFilePath = fileInfo.absolutePath() + "/" + newName;
@@ -176,7 +177,7 @@ void MainWindow::handleDeleteTriggered(){
     QModelIndex selectedIndex = ui->treeViewLeft->currentIndex();
     if (path.isEmpty()) {
         if(!selectedIndex.isValid()){
-            QMessageBox::warning(this, "Delete", "No file or directory selected.");
+            QMessageBox::warning(this, tr("Delete"), tr("No file or directory selected."));
             return;
         } else {
             path = modelLeft->filePath(selectedIndex);
@@ -184,18 +185,18 @@ void MainWindow::handleDeleteTriggered(){
     }
     QFileInfo fileInfo(path);
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Delete", "Are you sure you want to delete this?",
+    reply = QMessageBox::question(this, tr("Delete"), tr("Are you sure you want to delete this?"),
                                   QMessageBox::Yes | QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
         if (fileInfo.isFile()) {
             if (!QFile::remove(path)) {
-                QMessageBox::warning(this, "Delete", "Failed to delete file.");
+                QMessageBox::warning(this, tr("Delete"), tr("Failed to delete file."));
             }
         } else if (fileInfo.isDir()) {
             QDir dir(path);
             if (!dir.removeRecursively()) {
-                QMessageBox::warning(this, "Delete", "Failed to delete directory.");
+                QMessageBox::warning(this, tr("Delete"), tr("Failed to delete directory."));
             }
         }
     }
@@ -205,7 +206,7 @@ void MainWindow::handleDeleteTriggered(){
 void MainWindow::handleOpenActionTriggered(){
     QModelIndex index = currentIndex;
     if (!index.isValid()) {
-        QMessageBox::warning(this, "Open", "No file or directory selected.");
+        QMessageBox::warning(this, tr("Open"), tr("No file or directory selected."));
         return;
     }
     handleTreeViewDoubleClicked(index);
@@ -219,7 +220,7 @@ void MainWindow::onCopyTriggered(){
 
     if (!fileInfo.exists()) {
         if(!selectedIndex.isValid()){
-            QMessageBox::warning(this, "Copy", "No file or directory selected.");
+            QMessageBox::warning(this, tr("Copy"), tr("No file or directory selected."));
             return;
         } else {
             sourcePath = modelLeft->filePath(selectedIndex);;
@@ -243,7 +244,7 @@ void MainWindow::onPasteTriggered() {
 
     if (QFile::exists(newFilePath)) {
         QMessageBox::StandardButton reply = QMessageBox::question(
-            this, "Overwrite File", "The file already exists. Do you want to overwrite it?",
+            this, tr("Overwrite File"), tr("The file already exists. Do you want to overwrite it?"),
             QMessageBox::Yes | QMessageBox::No
             );
 
@@ -254,7 +255,7 @@ void MainWindow::onPasteTriggered() {
 
     if (sourceInfo.isFile()) {
         if (!QFile::copy(copyPath, newFilePath)) {
-            QMessageBox::warning(this, "Paste", "Failed to paste the file.");
+            QMessageBox::warning(this, tr("Paste"), tr("Failed to paste the file."));
         }
     } else if (sourceInfo.isDir()) {
         QDir sourceDir(copyPath);
@@ -264,7 +265,7 @@ void MainWindow::onPasteTriggered() {
         QDir newTargetDir(targetPathWithSourceDir);
 
         if (!copyDirectory(sourceDir, newTargetDir)) {
-            QMessageBox::warning(this, "Paste", "Failed to paste the directory.");
+            QMessageBox::warning(this, tr("Paste"), tr("Failed to paste the directory."));
         }
     }
 }
@@ -369,3 +370,32 @@ void MainWindow::onEscPressed() {
 MainWindow::~MainWindow(){
     delete ui;
 }
+
+void MainWindow::on_langButton_clicked()
+{
+
+    QString currentText = ui->langButton->text();
+
+    if (currentText == "ENG") {
+        qDebug() << "Current working directory:" << QDir::currentPath();
+        if (translator.load("../../translation_ukr.qm")) {
+            qApp->installTranslator(&translator);
+            ui->retranslateUi(this);
+        }
+        else{
+            qDebug() << "Failed to load translation file.";
+        }
+        ui->langButton->setText("УКР");
+
+    }
+    else {
+
+        qApp->removeTranslator(&translator);
+        ui->retranslateUi(this);
+        ui->langButton->setText("ENG");
+
+    }
+
+}
+
+

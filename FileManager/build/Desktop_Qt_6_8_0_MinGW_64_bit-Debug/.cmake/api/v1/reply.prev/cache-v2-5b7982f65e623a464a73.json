@@ -1602,6 +1602,18 @@
 			"value" : "1"
 		},
 		{
+			"name" : "LRELEASE_EXECUTABLE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a program."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "C:/Qt/6.8.0/mingw_64/bin/lrelease.exe"
+		},
+		{
 			"name" : "QT_ADDITIONAL_HOST_PACKAGES_PREFIX_PATH",
 			"properties" : 
 			[

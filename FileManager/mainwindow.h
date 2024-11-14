@@ -19,6 +19,7 @@
 #include <QTreeView>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QTranslator>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -46,6 +47,8 @@ private slots:
     bool eventFilter(QObject *object, QEvent *event);
     void onEnterPressed();
     void onEscPressed();
+    void on_langButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QTreeView *treeViewLeft;
@@ -54,6 +57,7 @@ private:
     QFileSystemModel *modelRight;
     QModelIndex currentIndex;
     QString copyPath;
+    QTranslator translator;
 };
 
 class CustomFileSystemModel : public QFileSystemModel {

@@ -69,3 +69,4 @@ install(TARGETS FileManager
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(FileManager)
 endif()
+
