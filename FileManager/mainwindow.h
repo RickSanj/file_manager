@@ -14,8 +14,11 @@
 #include <QAction>
 #include <QInputDialog>
 #include <QKeyEvent>
-
-
+#include <QApplication>
+#include <QSplitter>
+#include <QTreeView>
+#include <QVBoxLayout>
+#include <QWidget>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -45,7 +48,10 @@ private slots:
     void onEscPressed();
 private:
     Ui::MainWindow *ui;
-    QFileSystemModel *model;
+    QTreeView *treeViewLeft;
+    QTreeView *treeViewRight;
+    QFileSystemModel *modelLeft;
+    QFileSystemModel *modelRight;
     QModelIndex currentIndex;
     QString copyPath;
 };

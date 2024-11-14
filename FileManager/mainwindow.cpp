@@ -2,36 +2,74 @@
 #include "./ui_mainwindow.h"
 #include <iostream>
 
+// MainWindow::MainWindow(QWidget *parent)
+//     : QMainWindow(parent)
+//     , ui(new Ui::MainWindow){
+
+//     ui->setupUi(this);
+//     ui->label_2->setText("Current directory: ");
+//     ui->treeView->installEventFilter(this);
+
+//     model = new QFileSystemModel(this);
+//     model->setRootPath(QDir::rootPath());
+//     ui->treeView->setModel(model);
+//     ui->treeView->setRootIndex(model->index(QDir::rootPath()));
+//     ui->treeView->setItemsExpandable(false);
+//     ui->treeView->setRootIsDecorated(false);
+//     ui->lineEdit->setText(QDir::rootPath());
+
+//     connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::handleTreeViewDoubleClicked);
+
+//     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
+//     connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
+// }
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow){
-
+    , ui(new Ui::MainWindow)
+{
     ui->setupUi(this);
     ui->label_2->setText("Current directory: ");
-    ui->treeView->installEventFilter(this);
+    ui->treeViewLeft->installEventFilter(this);
+    treeViewLeft = ui->treeViewLeft;
+    treeViewRight = ui->treeViewRight;
 
-    model = new QFileSystemModel(this);
-    model->setRootPath(QDir::rootPath());
-    ui->treeView->setModel(model);
-    ui->treeView->setRootIndex(model->index(QDir::rootPath()));
-    ui->treeView->setItemsExpandable(false);
-    ui->treeView->setRootIsDecorated(false);
+
+    modelLeft = new QFileSystemModel(this);
+    modelLeft->setRootPath(QDir::rootPath());
+    treeViewLeft->setModel(modelLeft);
+    treeViewLeft->setRootIndex(modelLeft->index(QDir::homePath()));
+
+    modelRight = new QFileSystemModel(this);
+    modelRight->setRootPath(QDir::rootPath());
+    treeViewRight->setModel(modelRight);
+    treeViewRight->setRootIndex(modelRight->index(QDir::homePath()));
+
+
+    connect(treeViewLeft, &QTreeView::doubleClicked, this, &MainWindow::handleTreeViewDoubleClicked);
+    connect(treeViewRight, &QTreeView::doubleClicked, this, &MainWindow::handleTreeViewDoubleClicked);
+
+    ui->treeViewLeft->setItemsExpandable(false);
+    ui->treeViewRight->setItemsExpandable(false);
+    ui->treeViewLeft->setRootIsDecorated(false);
+    ui->treeViewRight->setRootIsDecorated(false);
     ui->lineEdit->setText(QDir::rootPath());
 
-    connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::handleTreeViewDoubleClicked);
-
-    ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
+    ui->treeViewLeft->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->treeViewLeft, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
+    // next maybe remove later
+    ui->treeViewRight->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->treeViewRight, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
 }
 
 
 void MainWindow::on_pushButton_clicked(){
     QString path = ui->lineEdit->text();
     if (path==""){
-        ui->treeView->setRootIndex(model->index(QDir::homePath()));
+        ui->treeViewLeft->setRootIndex(modelLeft->index(QDir::homePath()));
         ui->lineEdit->setText(QDir::homePath());
     } else{
-        ui->treeView->setRootIndex(model->index(path));
+        ui->treeViewLeft->setRootIndex(modelLeft->index(path));
     }
 }
 
@@ -39,9 +77,9 @@ void MainWindow::on_pushButton_clicked(){
 void MainWindow::handleSelectPathButtonClicked(){
     QString folderPath = QFileDialog::getExistingDirectory(this, "Select Folder", QDir::homePath());
     if (!folderPath.isEmpty()) {
-        model->setRootPath(folderPath);
-        ui->treeView->setModel(model);
-        ui->treeView->setRootIndex(model->index(folderPath));
+        modelLeft->setRootPath(folderPath);
+        ui->treeViewLeft->setModel(modelLeft);
+        ui->treeViewLeft->setRootIndex(modelLeft->index(folderPath));
         ui->lineEdit->setText(QDir::homePath());
     }
 }
@@ -50,21 +88,21 @@ void MainWindow::handleSelectPathButtonClicked(){
 void MainWindow::on_lineEdit_returnPressed(){
     QString path = ui->lineEdit->text();
     if (path==""){
-        ui->treeView->setRootIndex(model->index(QDir::homePath()));
+        ui->treeViewLeft->setRootIndex(modelLeft->index(QDir::homePath()));
         ui->lineEdit->setText(QDir::homePath());
     } else{
-        ui->treeView->setRootIndex(model->index(path));
+        ui->treeViewLeft->setRootIndex(modelLeft->index(path));
     }
 }
 
 
 void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index){
-        QString path = model->filePath(index);
+        QString path = modelLeft->filePath(index);
 
         QFileInfo fileInfo(path);
 
         if (fileInfo.isDir()) {
-            ui->treeView->setRootIndex(model->index(path));
+            ui->treeViewLeft->setRootIndex(modelLeft->index(path));
             ui->lineEdit->setText(path);
         } else if (fileInfo.isFile()) {
             QDesktopServices::openUrl(QUrl::fromLocalFile(path));
@@ -73,12 +111,12 @@ void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index){
 
 
 void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
-    currentIndex = ui->treeView->indexAt(pos);
+    currentIndex = ui->treeViewLeft->indexAt(pos);
 
 
     QMenu contextMenu(this);
 
-    QFileInfo fileInfo = model->fileInfo(currentIndex);
+    QFileInfo fileInfo = modelLeft->fileInfo(currentIndex);
 
     if (fileInfo.isFile()) {
         QAction *openAction = contextMenu.addAction("Open");
@@ -106,19 +144,19 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
         renameAction->setDisabled(true);
     }
 
-    contextMenu.exec(ui->treeView->viewport()->mapToGlobal(pos));
+    contextMenu.exec(ui->treeViewLeft->viewport()->mapToGlobal(pos));
 }
 
 
 void MainWindow::renameItem(){
-    QModelIndex index = ui->treeView->currentIndex();
+    QModelIndex index = ui->treeViewLeft->currentIndex();
 
     if (!index.isValid()) {
         return;
     }
 
-    QString oldName = model->fileName(index);
-    QString oldFilePath = model->filePath(index);
+    QString oldName = modelLeft->fileName(index);
+    QString oldFilePath = modelLeft->filePath(index);
     QFileInfo fileInfo(oldFilePath);
     bool ok;
     QString newName = QInputDialog::getText(this, "Rename", "Enter new name:", QLineEdit::Normal, oldName, &ok);
@@ -134,14 +172,14 @@ void MainWindow::renameItem(){
 
 
 void MainWindow::handleDeleteTriggered(){
-    QString path = model->filePath(currentIndex);
-    QModelIndex selectedIndex = ui->treeView->currentIndex();
+    QString path = modelLeft->filePath(currentIndex);
+    QModelIndex selectedIndex = ui->treeViewLeft->currentIndex();
     if (path.isEmpty()) {
         if(!selectedIndex.isValid()){
             QMessageBox::warning(this, "Delete", "No file or directory selected.");
             return;
         } else {
-            path = model->filePath(selectedIndex);
+            path = modelLeft->filePath(selectedIndex);
         }
     }
     QFileInfo fileInfo(path);
@@ -175,16 +213,16 @@ void MainWindow::handleOpenActionTriggered(){
 
 
 void MainWindow::onCopyTriggered(){
-    QString sourcePath = model->filePath(currentIndex);
+    QString sourcePath = modelLeft->filePath(currentIndex);
     QFileInfo fileInfo(sourcePath);
-    QModelIndex selectedIndex = ui->treeView->currentIndex();
+    QModelIndex selectedIndex = ui->treeViewLeft->currentIndex();
 
     if (!fileInfo.exists()) {
         if(!selectedIndex.isValid()){
             QMessageBox::warning(this, "Copy", "No file or directory selected.");
             return;
         } else {
-            sourcePath = model->filePath(selectedIndex);;
+            sourcePath = modelLeft->filePath(selectedIndex);;
         }
     }
 
@@ -193,11 +231,11 @@ void MainWindow::onCopyTriggered(){
 
 
 void MainWindow::onPasteTriggered() {
-    QString destinationPath = model->filePath(currentIndex);
+    QString destinationPath = modelLeft->filePath(currentIndex);
     QFileInfo destInfo(destinationPath);
 
     if (!destInfo.isDir()) {
-        destinationPath = model->filePath(ui->treeView->rootIndex());
+        destinationPath = modelLeft->filePath(ui->treeViewLeft->rootIndex());
     }
 
     QFileInfo sourceInfo(copyPath);
@@ -259,7 +297,8 @@ bool MainWindow::copyDirectory(QDir sourceDir, QDir targetDir){
 }
 
 bool MainWindow::eventFilter(QObject *object, QEvent *event) {
-    if (object == ui->treeView && event->type() == QEvent::KeyPress) {
+   // if (object == ui->treeView && event->type() == QEvent::KeyPress) {
+    if ((object == treeViewLeft || object == treeViewRight) && event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
 
@@ -293,13 +332,13 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
 
 
 void MainWindow::onEnterPressed() {
-    if (ui->treeView->hasFocus()) {
-        QModelIndex selectedIndex = ui->treeView->currentIndex();
+    if (ui->treeViewLeft->hasFocus()) {
+        QModelIndex selectedIndex = ui->treeViewLeft->currentIndex();
         if (selectedIndex.isValid()) {
-            QFileInfo fileInfo = model->fileInfo(selectedIndex);
+            QFileInfo fileInfo = modelLeft->fileInfo(selectedIndex);
 
             if (fileInfo.isDir()) {
-                ui->treeView->setRootIndex(model->index(fileInfo.absoluteFilePath()));
+                ui->treeViewLeft->setRootIndex(modelLeft->index(fileInfo.absoluteFilePath()));
                 ui->lineEdit->setText(fileInfo.absoluteFilePath());
             } else if (fileInfo.isFile()) {
                 QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
@@ -310,15 +349,15 @@ void MainWindow::onEnterPressed() {
 
 
 void MainWindow::onEscPressed() {
-    QModelIndex currentRootIndex = ui->treeView->rootIndex();
+    QModelIndex currentRootIndex = ui->treeViewLeft->rootIndex();
 
     QModelIndex parentIndex = currentRootIndex.parent();
     if (parentIndex.isValid()) {
 
-        QFileInfo fileInfo = model->fileInfo(parentIndex);
+        QFileInfo fileInfo = modelLeft->fileInfo(parentIndex);
 
         if (fileInfo.isDir()) {
-            ui->treeView->setRootIndex(model->index(fileInfo.absoluteFilePath()));
+            ui->treeViewLeft->setRootIndex(modelLeft->index(fileInfo.absoluteFilePath()));
             ui->lineEdit->setText(fileInfo.absoluteFilePath());
         } else if (fileInfo.isFile()) {
             QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
