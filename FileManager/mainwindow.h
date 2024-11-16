@@ -34,6 +34,7 @@ private slots:
     void handleTreeViewDoubleClicked(const QModelIndex &index);
     void on_lineEdit_returnPressed();
     void handleCustomContextMenuRequested(const QPoint &pos);
+    QStringList getSelectedFilePaths();
 
     void handleDeleteTriggered();
     void handleCutTriggered();
@@ -47,12 +48,20 @@ private slots:
     bool eventFilter(QObject *object, QEvent *event);
     void onEnterPressed();
     void onEscPressed();
+    void onSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+
+    void pasteFile(QString sourcePath, QString newFilePath);
+    void pasteDir(QString sourcePath, QString destinationPath);
+    void checkExistance(QString path);
+
+
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *model;
     QModelIndex currentIndex;
     QString copyPath;
     QString cutPath;
+    QList<QString> selectedRowsBuffer;
     bool isCutOperation = false;
 };
 

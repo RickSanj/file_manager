@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->label_2->setText("Current directory: ");
     ui->treeView->installEventFilter(this);
+    ui->treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     model = new QFileSystemModel(this);
     model->setRootPath(QDir::rootPath());
@@ -19,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lineEdit->setText(QDir::rootPath());
 
     connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::handleTreeViewDoubleClicked);
+    connect(ui->treeView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::onSelectionChanged);
 
     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
@@ -35,7 +37,6 @@ void MainWindow::on_pushButton_clicked(){
     }
 }
 
-
 void MainWindow::handleSelectPathButtonClicked(){
     QString folderPath = QFileDialog::getExistingDirectory(this, "Select Folder", QDir::homePath());
     if (!folderPath.isEmpty()) {
@@ -45,7 +46,6 @@ void MainWindow::handleSelectPathButtonClicked(){
         ui->lineEdit->setText(QDir::homePath());
     }
 }
-
 
 void MainWindow::on_lineEdit_returnPressed(){
     QString path = ui->lineEdit->text();
@@ -69,8 +69,9 @@ void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index){
     } else if (fileInfo.isFile()) {
         QDesktopServices::openUrl(QUrl::fromLocalFile(path));
     }
-}
 
+    selectedRowsBuffer.clear();
+}
 
 void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
     currentIndex = ui->treeView->indexAt(pos);
@@ -119,7 +120,13 @@ void MainWindow::handleOpenActionTriggered(){
     handleTreeViewDoubleClicked(index);
 }
 
+
 void MainWindow::handleCopyTriggered(){
+    if(!selectedRowsBuffer.empty()){
+        return;
+    }
+
+
     QString sourcePath = model->filePath(currentIndex);
     QFileInfo fileInfo(sourcePath);
     QModelIndex selectedIndex = ui->treeView->currentIndex();
@@ -145,32 +152,60 @@ void MainWindow::handleCutTriggered() {
         if(!selectedIndex.isValid()){
             QMessageBox::warning(this, "Cut", "No file or directory selected.");
             return;
-        } else {
-            cutPath = model->filePath(selectedIndex);
-            isCutOperation = true;
-            copyPath.clear();
         }
     }
+
+    cutPath = model->filePath(selectedIndex);
+    copyPath.clear();
+
+    std::cout << cutPath.toStdString() << std::endl;
+    std::cout << copyPath.toStdString() << std::endl;
+    isCutOperation = true;
 }
 
-void MainWindow::handlePasteTriggered() {
-    QString destinationPath = model->filePath(currentIndex);
-    QFileInfo destInfo(destinationPath);
-
-    if (!destInfo.isDir()) {
-        destinationPath = model->filePath(ui->treeView->rootIndex());
-    }
-
-    QString sourcePath = isCutOperation ? cutPath : copyPath;
-    if (sourcePath.isEmpty()) {
-        QMessageBox::warning(this, "Paste", "No source file or directory to paste.");
-        return;
-    }
-
+void MainWindow::pasteFile(QString sourcePath, QString destinationPath){
     QFileInfo sourceInfo(sourcePath);
     QString newFilePath = destinationPath + "/" + sourceInfo.fileName();
 
-    if (QFile::exists(newFilePath)) {
+    QFileInfo destInfo(newFilePath);
+
+    if (isCutOperation) {
+        if (!QFile::rename(sourcePath, newFilePath)) {
+            QMessageBox::warning(this, "Paste", "Failed to move the file.");
+            return;
+        }
+    } else {
+        if (!QFile::copy(sourcePath, newFilePath)) {
+            QMessageBox::warning(this, "Paste", "Failed to copy the file.");
+            return;
+        }
+    }
+};
+
+void MainWindow::pasteDir(QString sourcePath, QString destinationPath){
+    QDir sourceDir(sourcePath);
+    QDir targetDir(destinationPath);
+
+    QString targetPathWithSourceDir = targetDir.filePath(sourceDir.dirName());
+    QDir newTargetDir(targetPathWithSourceDir);
+
+    if (isCutOperation) {
+        if (!sourceDir.rename(sourceDir.path(), targetPathWithSourceDir)) {
+            QMessageBox::warning(this, "Paste", "Failed to move the directory.");
+            return;
+        }
+    } else {
+        if (!copyDirectory(sourceDir, newTargetDir)) {
+            QMessageBox::warning(this, "Paste", "Failed to copy the directory.");
+            return;
+        }
+    }
+};
+
+void MainWindow::checkExistance(QString path){
+    QFileInfo sourceInfo(path);
+
+    if (QFile::exists(path)) {
         QMessageBox::StandardButton reply = QMessageBox::question(
             this, "Overwrite File", "The file or directory already exists. Do you want to overwrite it?",
             QMessageBox::Yes | QMessageBox::No
@@ -181,47 +216,52 @@ void MainWindow::handlePasteTriggered() {
         }
 
         if (sourceInfo.isFile()) {
-            QFile::remove(newFilePath);
+            QFile::remove(path);
         } else if (sourceInfo.isDir()) {
-            QDir(newFilePath).removeRecursively();
+            QDir(path).removeRecursively();
         }
     }
+}
 
-    if (sourceInfo.isFile()) {
-        if (isCutOperation) {
-            if (!QFile::rename(sourcePath, newFilePath)) {
-                QMessageBox::warning(this, "Paste", "Failed to move the file.");
-                return;
-            }
-        } else {
-            if (!QFile::copy(sourcePath, newFilePath)) {
-                QMessageBox::warning(this, "Paste", "Failed to copy the file.");
-                return;
-            }
+void MainWindow::handlePasteTriggered() {
+    QString sourcePath = isCutOperation ? cutPath : copyPath;
+
+    QString destinationPath = model->filePath(currentIndex);
+    QFileInfo destInfo(destinationPath);
+
+    if (!destInfo.isDir()) {
+        destinationPath = model->filePath(ui->treeView->rootIndex());
+    }
+    if(selectedRowsBuffer.empty()){
+        selectedRowsBuffer.append(sourcePath);
+    }
+    for(const QString &path : selectedRowsBuffer){
+        QFileInfo sourceInfo(path);
+
+        if (!QFile::exists(path)) {
+            std::cout << path.toStdString() << std::endl;
+            QMessageBox::warning(this, "Error", "Source file does not exist.");
+            return;
         }
-    } else if (sourceInfo.isDir()) {
-        QDir sourceDir(sourcePath);
-        QDir targetDir(destinationPath);
+        if (path.isEmpty()) {
+            QMessageBox::warning(this, "Paste", "No source file or directory to paste.");
+            return;
+        }
 
-        QString targetPathWithSourceDir = targetDir.filePath(sourceDir.dirName());
-        QDir newTargetDir(targetPathWithSourceDir);
+        checkExistance(destinationPath + "/" + sourceInfo.fileName());
 
-        if (isCutOperation) {
-            if (!sourceDir.rename(sourceDir.path(), targetPathWithSourceDir)) {
-                QMessageBox::warning(this, "Paste", "Failed to move the directory.");
-                return;
-            }
-        } else {
-            if (!copyDirectory(sourceDir, newTargetDir)) {
-                QMessageBox::warning(this, "Paste", "Failed to copy the directory.");
-                return;
-            }
+        if (sourceInfo.isFile()) {
+            pasteFile(path, destinationPath);
+        } else if (sourceInfo.isDir()) {
+            pasteDir(path, destinationPath);
         }
     }
 
     if (isCutOperation) {
         cutPath.clear();
+        copyPath.clear();
         isCutOperation = false;
+        selectedRowsBuffer.clear();
     }
 }
 
@@ -277,6 +317,7 @@ void MainWindow::handleRenameTriggered(){
     }
 }
 
+
 bool MainWindow::copyDirectory(QDir sourceDir, QDir targetDir){
     if (!targetDir.exists()) {
         targetDir.mkdir(targetDir.path());
@@ -308,6 +349,30 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
 
+        if (keyEvent->modifiers() == Qt::ShiftModifier &&
+            (keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_Down)) {
+
+            QModelIndex currentIndex = ui->treeView->currentIndex();
+            QModelIndex nextIndex;
+
+            if (keyEvent->key() == Qt::Key_Up) {
+                nextIndex = model->index(currentIndex.row() - 1, currentIndex.column(), currentIndex.parent());
+            } else if (keyEvent->key() == Qt::Key_Down) {
+                nextIndex = model->index(currentIndex.row() + 1, currentIndex.column(), currentIndex.parent());
+            }
+
+            if (nextIndex.isValid()) {
+                ui->treeView->selectionModel()->select(
+                    QItemSelection(currentIndex, nextIndex),
+                    QItemSelectionModel::Select
+                    );
+                ui->treeView->setCurrentIndex(nextIndex);
+            }
+            selectedRowsBuffer = getSelectedFilePaths();
+            return true;
+        }
+
+
         if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
             onEnterPressed();
             return true;
@@ -337,12 +402,15 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
         }
 
     }
-    // Standard event processing
     return QMainWindow::eventFilter(object, event);
 }
 
 
 void MainWindow::onEnterPressed() {
+    for(auto v : selectedRowsBuffer){
+        std::cout << v.toStdString() << std::endl;
+    }
+
     if (ui->treeView->hasFocus()) {
         QModelIndex selectedIndex = ui->treeView->currentIndex();
         if (selectedIndex.isValid()) {
@@ -375,6 +443,27 @@ void MainWindow::onEscPressed() {
     }
 }
 
+void MainWindow::onSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
+    Q_UNUSED(selected);
+    Q_UNUSED(deselected);
+
+    QItemSelectionModel *selectionModel = ui->treeView->selectionModel();
+    if (selectionModel->selectedIndexes().isEmpty()) {
+        selectedRowsBuffer.clear();
+    }
+}
+
+QStringList MainWindow::getSelectedFilePaths() {
+    QStringList filePaths;
+    QItemSelectionModel *selectionModel = ui->treeView->selectionModel();
+    QModelIndexList selectedIndexes = selectionModel->selectedRows();
+
+    for (const QModelIndex &index : selectedIndexes) {
+        QString filePath = model->filePath(index);
+        filePaths.append(filePath);
+    }
+    return filePaths;
+}
 
 MainWindow::~MainWindow(){
     delete ui;
