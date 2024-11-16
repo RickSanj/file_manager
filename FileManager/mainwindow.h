@@ -23,8 +23,6 @@
 #include <QDialog>
 #include <QLabel>
 #include <iostream>
-#include <QDebug>
-
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -101,4 +99,3 @@ public:
 };
 
 #endif // MAINWINDOW_H
-
