@@ -20,6 +20,9 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QTranslator>
+#include <QDialog>
+#include <QLabel>
+#include <iostream>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -48,6 +51,7 @@ private slots:
     void onEnterPressed();
     void onEscPressed();
     void on_langButton_clicked();
+    void showProperties();
 
 private:
     Ui::MainWindow *ui;

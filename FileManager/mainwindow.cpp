@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include <iostream>
+
 
 // MainWindow::MainWindow(QWidget *parent)
 //     : QMainWindow(parent)
@@ -110,6 +110,31 @@ void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index){
         }
 }
 
+void MainWindow::showProperties() {
+    QModelIndex index = treeViewLeft->currentIndex();
+    if (!index.isValid())
+        return;
+
+
+    QString filePath = modelLeft->filePath(index);
+
+    QFileInfo fileInfo(filePath);
+
+
+    QDialog *dialog = new QDialog(this);
+    dialog->setWindowTitle(tr("Properties"));
+    QVBoxLayout *layout = new QVBoxLayout(dialog);
+
+
+    layout->addWidget(new QLabel(tr("Name: ") + fileInfo.fileName()));
+    layout->addWidget(new QLabel(tr("Path: ") + fileInfo.absoluteFilePath()));
+    layout->addWidget(new QLabel(tr("Size: ") + QString::number(fileInfo.size()) + tr(" bytes")));
+    layout->addWidget(new QLabel(QString(tr("Type: ")) + (fileInfo.isDir() ? tr("Folder") : tr("File"))));
+    layout->addWidget(new QLabel(tr("Last Modified: ") + fileInfo.lastModified().toString()));
+
+    dialog->setLayout(layout);
+    dialog->exec();
+}
 
 void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
     currentIndex = ui->treeViewLeft->indexAt(pos);
@@ -129,11 +154,13 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
     QAction *pasteAction = contextMenu.addAction(tr("Paste"));
     QAction *deleteAction = contextMenu.addAction(tr("Delete"));
     QAction *renameAction = contextMenu.addAction(tr("Rename"));
+    QAction *propertiesAction = contextMenu.addAction(tr("Properties"));
 
     connect(deleteAction, &QAction::triggered, this, &MainWindow::handleDeleteTriggered);
     connect(renameAction, &QAction::triggered, this, &MainWindow::renameItem);    
     connect(copyAction, &QAction::triggered, this, &MainWindow::onCopyTriggered);
     connect(pasteAction, &QAction::triggered, this, &MainWindow::onPasteTriggered);
+    connect(propertiesAction, &QAction::triggered, this, &MainWindow::showProperties);
 
     if (copyPath.isEmpty()){
         pasteAction->setDisabled(true);
@@ -377,7 +404,7 @@ void MainWindow::on_langButton_clicked()
     QString currentText = ui->langButton->text();
 
     if (currentText == "ENG") {
-        qDebug() << "Current working directory:" << QDir::currentPath();
+       // qDebug() << "Current working directory:" << QDir::currentPath();
         if (translator.load("../../translation_ukr.qm")) {
             qApp->installTranslator(&translator);
             ui->retranslateUi(this);
