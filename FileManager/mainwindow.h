@@ -34,11 +34,15 @@ private slots:
     void handleTreeViewDoubleClicked(const QModelIndex &index);
     void on_lineEdit_returnPressed();
     void handleCustomContextMenuRequested(const QPoint &pos);
+
     void handleDeleteTriggered();
-    void renameItem();
+    void handleCutTriggered();
+    void handleRenameTriggered();
     void handleOpenActionTriggered();
-    void onCopyTriggered();
-    void onPasteTriggered();
+
+    void handleCopyTriggered();
+    void handlePasteTriggered();
+
     bool copyDirectory(QDir sourceDir, QDir targetDir);
     bool eventFilter(QObject *object, QEvent *event);
     void onEnterPressed();
@@ -48,6 +52,8 @@ private:
     QFileSystemModel *model;
     QModelIndex currentIndex;
     QString copyPath;
+    QString cutPath;
+    bool isCutOperation = false;
 };
 
 class CustomFileSystemModel : public QFileSystemModel {

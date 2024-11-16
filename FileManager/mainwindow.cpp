@@ -59,16 +59,16 @@ void MainWindow::on_lineEdit_returnPressed(){
 
 
 void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index){
-        QString path = model->filePath(index);
+    QString path = model->filePath(index);
 
-        QFileInfo fileInfo(path);
+    QFileInfo fileInfo(path);
 
-        if (fileInfo.isDir()) {
-            ui->treeView->setRootIndex(model->index(path));
-            ui->lineEdit->setText(path);
-        } else if (fileInfo.isFile()) {
-            QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-        }
+    if (fileInfo.isDir()) {
+        ui->treeView->setRootIndex(model->index(path));
+        ui->lineEdit->setText(path);
+    } else if (fileInfo.isFile()) {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+    }
 }
 
 
@@ -85,18 +85,19 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
         connect(openAction, &QAction::triggered, this, &MainWindow::handleOpenActionTriggered);
     }
 
-
+    QAction *cutAction = contextMenu.addAction("Cut");
     QAction *copyAction = contextMenu.addAction("Copy");
     QAction *pasteAction = contextMenu.addAction("Paste");
     QAction *deleteAction = contextMenu.addAction("Delete");
     QAction *renameAction = contextMenu.addAction("Rename");
 
+    connect(cutAction, &QAction::triggered, this, &MainWindow::handleCutTriggered);
     connect(deleteAction, &QAction::triggered, this, &MainWindow::handleDeleteTriggered);
-    connect(renameAction, &QAction::triggered, this, &MainWindow::renameItem);    
-    connect(copyAction, &QAction::triggered, this, &MainWindow::onCopyTriggered);
-    connect(pasteAction, &QAction::triggered, this, &MainWindow::onPasteTriggered);
+    connect(renameAction, &QAction::triggered, this, &MainWindow::handleRenameTriggered);
+    connect(copyAction, &QAction::triggered, this, &MainWindow::handleCopyTriggered);
+    connect(pasteAction, &QAction::triggered, this, &MainWindow::handlePasteTriggered);
 
-    if (copyPath.isEmpty()){
+    if (copyPath.isEmpty() && !cutAction){
         pasteAction->setDisabled(true);
     }
 
@@ -109,29 +110,120 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
     contextMenu.exec(ui->treeView->viewport()->mapToGlobal(pos));
 }
 
-
-void MainWindow::renameItem(){
-    QModelIndex index = ui->treeView->currentIndex();
-
+void MainWindow::handleOpenActionTriggered(){
+    QModelIndex index = currentIndex;
     if (!index.isValid()) {
+        QMessageBox::warning(this, "Open", "No file or directory selected.");
         return;
     }
+    handleTreeViewDoubleClicked(index);
+}
 
-    QString oldName = model->fileName(index);
-    QString oldFilePath = model->filePath(index);
-    QFileInfo fileInfo(oldFilePath);
-    bool ok;
-    QString newName = QInputDialog::getText(this, "Rename", "Enter new name:", QLineEdit::Normal, oldName, &ok);
+void MainWindow::handleCopyTriggered(){
+    QString sourcePath = model->filePath(currentIndex);
+    QFileInfo fileInfo(sourcePath);
+    QModelIndex selectedIndex = ui->treeView->currentIndex();
 
-    if (!ok || newName.isEmpty()) {
-        QMessageBox::warning(this, "Rename Error", "Failed to rename file or folder.");
+    if (!fileInfo.exists()) {
+        if(!selectedIndex.isValid()){
+            QMessageBox::warning(this, "Copy", "No file or directory selected.");
+            return;
+        } else {
+            sourcePath = model->filePath(selectedIndex);
+        }
     }
-    else {
-        QString newFilePath = fileInfo.absolutePath() + "/" + newName;
-        QFile::rename(oldFilePath, newFilePath);
+
+    copyPath = sourcePath;
+}
+
+void MainWindow::handleCutTriggered() {
+    QString sourcePath = model->filePath(currentIndex);
+    QFileInfo fileInfo(sourcePath);
+    QModelIndex selectedIndex = ui->treeView->currentIndex();
+
+    if (!fileInfo.exists()) {
+        if(!selectedIndex.isValid()){
+            QMessageBox::warning(this, "Cut", "No file or directory selected.");
+            return;
+        } else {
+            cutPath = model->filePath(selectedIndex);
+            isCutOperation = true;
+            copyPath.clear();
+        }
     }
 }
 
+void MainWindow::handlePasteTriggered() {
+    QString destinationPath = model->filePath(currentIndex);
+    QFileInfo destInfo(destinationPath);
+
+    if (!destInfo.isDir()) {
+        destinationPath = model->filePath(ui->treeView->rootIndex());
+    }
+
+    QString sourcePath = isCutOperation ? cutPath : copyPath;
+    if (sourcePath.isEmpty()) {
+        QMessageBox::warning(this, "Paste", "No source file or directory to paste.");
+        return;
+    }
+
+    QFileInfo sourceInfo(sourcePath);
+    QString newFilePath = destinationPath + "/" + sourceInfo.fileName();
+
+    if (QFile::exists(newFilePath)) {
+        QMessageBox::StandardButton reply = QMessageBox::question(
+            this, "Overwrite File", "The file or directory already exists. Do you want to overwrite it?",
+            QMessageBox::Yes | QMessageBox::No
+            );
+
+        if (reply == QMessageBox::No) {
+            return;
+        }
+
+        if (sourceInfo.isFile()) {
+            QFile::remove(newFilePath);
+        } else if (sourceInfo.isDir()) {
+            QDir(newFilePath).removeRecursively();
+        }
+    }
+
+    if (sourceInfo.isFile()) {
+        if (isCutOperation) {
+            if (!QFile::rename(sourcePath, newFilePath)) {
+                QMessageBox::warning(this, "Paste", "Failed to move the file.");
+                return;
+            }
+        } else {
+            if (!QFile::copy(sourcePath, newFilePath)) {
+                QMessageBox::warning(this, "Paste", "Failed to copy the file.");
+                return;
+            }
+        }
+    } else if (sourceInfo.isDir()) {
+        QDir sourceDir(sourcePath);
+        QDir targetDir(destinationPath);
+
+        QString targetPathWithSourceDir = targetDir.filePath(sourceDir.dirName());
+        QDir newTargetDir(targetPathWithSourceDir);
+
+        if (isCutOperation) {
+            if (!sourceDir.rename(sourceDir.path(), targetPathWithSourceDir)) {
+                QMessageBox::warning(this, "Paste", "Failed to move the directory.");
+                return;
+            }
+        } else {
+            if (!copyDirectory(sourceDir, newTargetDir)) {
+                QMessageBox::warning(this, "Paste", "Failed to copy the directory.");
+                return;
+            }
+        }
+    }
+
+    if (isCutOperation) {
+        cutPath.clear();
+        isCutOperation = false;
+    }
+}
 
 void MainWindow::handleDeleteTriggered(){
     QString path = model->filePath(currentIndex);
@@ -163,74 +255,27 @@ void MainWindow::handleDeleteTriggered(){
     }
 }
 
+void MainWindow::handleRenameTriggered(){
+    QModelIndex index = ui->treeView->currentIndex();
 
-void MainWindow::handleOpenActionTriggered(){
-    QModelIndex index = currentIndex;
     if (!index.isValid()) {
-        QMessageBox::warning(this, "Open", "No file or directory selected.");
         return;
     }
-    handleTreeViewDoubleClicked(index);
-}
 
+    QString oldName = model->fileName(index);
+    QString oldFilePath = model->filePath(index);
+    QFileInfo fileInfo(oldFilePath);
+    bool ok;
+    QString newName = QInputDialog::getText(this, "Rename", "Enter new name:", QLineEdit::Normal, oldName, &ok);
 
-void MainWindow::onCopyTriggered(){
-    QString sourcePath = model->filePath(currentIndex);
-    QFileInfo fileInfo(sourcePath);
-    QModelIndex selectedIndex = ui->treeView->currentIndex();
-
-    if (!fileInfo.exists()) {
-        if(!selectedIndex.isValid()){
-            QMessageBox::warning(this, "Copy", "No file or directory selected.");
-            return;
-        } else {
-            sourcePath = model->filePath(selectedIndex);;
-        }
+    if (!ok || newName.isEmpty()) {
+        QMessageBox::warning(this, "Rename Error", "Failed to rename file or folder.");
     }
-
-    copyPath = sourcePath;
-}
-
-
-void MainWindow::onPasteTriggered() {
-    QString destinationPath = model->filePath(currentIndex);
-    QFileInfo destInfo(destinationPath);
-
-    if (!destInfo.isDir()) {
-        destinationPath = model->filePath(ui->treeView->rootIndex());
-    }
-
-    QFileInfo sourceInfo(copyPath);
-    QString newFilePath = destinationPath + "/" + sourceInfo.fileName();
-
-    if (QFile::exists(newFilePath)) {
-        QMessageBox::StandardButton reply = QMessageBox::question(
-            this, "Overwrite File", "The file already exists. Do you want to overwrite it?",
-            QMessageBox::Yes | QMessageBox::No
-            );
-
-        if (reply == QMessageBox::No) {
-            return;
-        }
-    }
-
-    if (sourceInfo.isFile()) {
-        if (!QFile::copy(copyPath, newFilePath)) {
-            QMessageBox::warning(this, "Paste", "Failed to paste the file.");
-        }
-    } else if (sourceInfo.isDir()) {
-        QDir sourceDir(copyPath);
-        QDir targetDir(destinationPath);
-
-        QString targetPathWithSourceDir = targetDir.filePath(sourceDir.dirName());
-        QDir newTargetDir(targetPathWithSourceDir);
-
-        if (!copyDirectory(sourceDir, newTargetDir)) {
-            QMessageBox::warning(this, "Paste", "Failed to paste the directory.");
-        }
+    else {
+        QString newFilePath = fileInfo.absolutePath() + "/" + newName;
+        QFile::rename(oldFilePath, newFilePath);
     }
 }
-
 
 bool MainWindow::copyDirectory(QDir sourceDir, QDir targetDir){
     if (!targetDir.exists()) {
@@ -278,11 +323,16 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
             return true;
         }
         if (keyEvent->key() == Qt::Key_C && keyEvent->modifiers() == Qt::ControlModifier) {
-            onCopyTriggered();
+            handleCopyTriggered();
             return true;
         }
         if (keyEvent->key() == Qt::Key_V && keyEvent->modifiers() == Qt::ControlModifier) {
-            onPasteTriggered();
+            handlePasteTriggered();
+            return true;
+        }
+
+        if (keyEvent->key() == Qt::Key_X && keyEvent->modifiers() == Qt::ControlModifier) {
+            handleCutTriggered();
             return true;
         }
 
@@ -307,7 +357,6 @@ void MainWindow::onEnterPressed() {
         }
     }
 }
-
 
 void MainWindow::onEscPressed() {
     QModelIndex currentRootIndex = ui->treeView->rootIndex();
