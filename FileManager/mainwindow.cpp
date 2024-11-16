@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->treeViewLeft->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeViewLeft, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
-
+    // next maybe remove later
     ui->treeViewRight->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeViewRight, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
 }
@@ -100,21 +100,42 @@ void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index) {
 
 
 void MainWindow::showProperties() {
-    QModelIndex index = treeViewLeft->currentIndex();
-    if (!index.isValid())
+    // Determine which tree view is active
+    QTreeView *activeTreeView = nullptr;
+    QFileSystemModel *activeModel = nullptr;
+
+    // Check which tree view has focus
+    if (ui->treeViewLeft->hasFocus()) {
+        activeTreeView = ui->treeViewLeft;
+        activeModel = modelLeft;
+    } else if (ui->treeViewRight->hasFocus()) {
+        activeTreeView = ui->treeViewRight;
+        activeModel = modelRight;
+    }
+
+    // If no tree view is active, return
+    if (!activeTreeView || !activeModel) {
+        QMessageBox::warning(this, tr("Properties"), tr("No panel is active."));
         return;
+    }
 
+    // Get the selected index in the active tree view
+    QModelIndex index = activeTreeView->currentIndex();
+    if (!index.isValid()) {
+        QMessageBox::warning(this, tr("Properties"), tr("No file or directory selected."));
+        return;
+    }
 
-    QString filePath = modelLeft->filePath(index);
-
+    // Get file information for the selected item
+    QString filePath = activeModel->filePath(index);
     QFileInfo fileInfo(filePath);
 
-
+    // Create the dialog to display properties
     QDialog *dialog = new QDialog(this);
     dialog->setWindowTitle(tr("Properties"));
     QVBoxLayout *layout = new QVBoxLayout(dialog);
 
-
+    // Add property details to the layout
     layout->addWidget(new QLabel(tr("Name: ") + fileInfo.fileName()));
     layout->addWidget(new QLabel(tr("Path: ") + fileInfo.absoluteFilePath()));
     layout->addWidget(new QLabel(tr("Size: ") + QString::number(fileInfo.size()) + tr(" bytes")));
@@ -125,20 +146,35 @@ void MainWindow::showProperties() {
     dialog->exec();
 }
 
-void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
-    currentIndex = ui->treeViewLeft->indexAt(pos);
 
+void MainWindow::handleCustomContextMenuRequested(const QPoint &pos) {
+    // Determine which tree view triggered the context menu
+    QTreeView *treeView = qobject_cast<QTreeView *>(sender());
+    if (!treeView) return;
 
+    // Determine the model associated with the tree view
+    QFileSystemModel *model = nullptr;
+    if (treeView == ui->treeViewLeft) {
+        model = modelLeft;
+    } else if (treeView == ui->treeViewRight) {
+        model = modelRight;
+    }
+    if (!model) return;
+
+    // Get the file or directory at the context menu position
+    QModelIndex index = treeView->indexAt(pos);
+    QFileInfo fileInfo = model->fileInfo(index);
+
+    // Create the context menu
     QMenu contextMenu(this);
 
-    QFileInfo fileInfo = modelLeft->fileInfo(currentIndex);
-
+    // Add "Open" action for files
     if (fileInfo.isFile()) {
         QAction *openAction = contextMenu.addAction(tr("Open"));
         connect(openAction, &QAction::triggered, this, &MainWindow::handleOpenActionTriggered);
     }
 
-
+    // Add other actions
     QAction *copyAction = contextMenu.addAction(tr("Copy"));
     QAction *pasteAction = contextMenu.addAction(tr("Paste"));
     QAction *deleteAction = contextMenu.addAction(tr("Delete"));
@@ -146,22 +182,25 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos){
     QAction *propertiesAction = contextMenu.addAction(tr("Properties"));
 
     connect(deleteAction, &QAction::triggered, this, &MainWindow::handleDeleteTriggered);
-    connect(renameAction, &QAction::triggered, this, &MainWindow::renameItem);    
+    connect(renameAction, &QAction::triggered, this, &MainWindow::renameItem);
     connect(copyAction, &QAction::triggered, this, &MainWindow::onCopyTriggered);
     connect(pasteAction, &QAction::triggered, this, &MainWindow::onPasteTriggered);
     connect(propertiesAction, &QAction::triggered, this, &MainWindow::showProperties);
 
-    if (copyPath.isEmpty()){
+    // Disable "Paste" if no path has been copied
+    if (copyPath.isEmpty()) {
         pasteAction->setDisabled(true);
     }
 
-    if (!currentIndex.isValid()) {
+    // Disable invalid actions if no valid index is selected
+    if (!index.isValid()) {
         copyAction->setDisabled(true);
         deleteAction->setDisabled(true);
         renameAction->setDisabled(true);
     }
 
-    contextMenu.exec(ui->treeViewLeft->viewport()->mapToGlobal(pos));
+    // Show the context menu
+    contextMenu.exec(treeView->viewport()->mapToGlobal(pos));
 }
 
 
