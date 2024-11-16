@@ -123,53 +123,20 @@ void MainWindow::handleOpenActionTriggered(){
 
 void MainWindow::handleCopyTriggered(){
     selectedRowsBuffer = getSelectedFilePaths();
-
-    QString sourcePath = model->filePath(currentIndex);
-    QFileInfo fileInfo(sourcePath);
-    QModelIndex selectedIndex = ui->treeView->currentIndex();
-
-    if (!fileInfo.exists()) {
-        if(!selectedIndex.isValid()){
-            QMessageBox::warning(this, "Copy", "No file or directory selected.");
-            return;
-        } else {
-            sourcePath = model->filePath(selectedIndex);
-        }
-    }
-
-    copyPath = sourcePath;
 }
 
 void MainWindow::handleCutTriggered() {
     selectedRowsBuffer = getSelectedFilePaths();
 
-    QString sourcePath = model->filePath(currentIndex);
-    QFileInfo fileInfo(sourcePath);
-    QModelIndex selectedIndex = ui->treeView->currentIndex();
-
-    if (!fileInfo.exists()) {
-        if(!selectedIndex.isValid()){
-            QMessageBox::warning(this, "Cut", "No file or directory selected.");
-            return;
-        }
-    }
-
-    cutPath = model->filePath(selectedIndex);
-    copyPath.clear();
     isCutOperation = true;
 }
 
 void MainWindow::handlePasteTriggered() {
-    QString sourcePath = isCutOperation ? cutPath : copyPath;
-
     QString destinationPath = model->filePath(currentIndex);
     QFileInfo destInfo(destinationPath);
 
     if (!destInfo.isDir()) {
         destinationPath = model->filePath(ui->treeView->rootIndex());
-    }
-    if(selectedRowsBuffer.empty()){
-        selectedRowsBuffer.append(sourcePath);
     }
     for(const QString &path : selectedRowsBuffer){
         QFileInfo sourceInfo(path);
@@ -202,30 +169,24 @@ void MainWindow::handlePasteTriggered() {
 }
 
 void MainWindow::handleDeleteTriggered(){
-    QString path = model->filePath(currentIndex);
-    QModelIndex selectedIndex = ui->treeView->currentIndex();
-    if (path.isEmpty()) {
-        if(!selectedIndex.isValid()){
-            QMessageBox::warning(this, "Delete", "No file or directory selected.");
-            return;
-        } else {
-            path = model->filePath(selectedIndex);
-        }
-    }
-    QFileInfo fileInfo(path);
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Delete", "Are you sure you want to delete this?",
-                                  QMessageBox::Yes | QMessageBox::No);
+    selectedRowsBuffer = getSelectedFilePaths();
 
-    if (reply == QMessageBox::Yes) {
-        if (fileInfo.isFile()) {
-            if (!QFile::remove(path)) {
-                QMessageBox::warning(this, "Delete", "Failed to delete file.");
-            }
-        } else if (fileInfo.isDir()) {
-            QDir dir(path);
-            if (!dir.removeRecursively()) {
-                QMessageBox::warning(this, "Delete", "Failed to delete directory.");
+    for(auto path : selectedRowsBuffer){
+        QFileInfo fileInfo(path);
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Delete", "Are you sure you want to delete this?",
+                                      QMessageBox::Yes | QMessageBox::No);
+
+        if (reply == QMessageBox::Yes) {
+            if (fileInfo.isFile()) {
+                if (!QFile::remove(path)) {
+                    QMessageBox::warning(this, "Delete", "Failed to delete file.");
+                }
+            } else if (fileInfo.isDir()) {
+                QDir dir(path);
+                if (!dir.removeRecursively()) {
+                    QMessageBox::warning(this, "Delete", "Failed to delete directory.");
+                }
             }
         }
     }
