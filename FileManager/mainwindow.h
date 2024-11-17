@@ -14,7 +14,16 @@
 #include <QAction>
 #include <QInputDialog>
 #include <QKeyEvent>
-
+#include <QApplication>
+#include <QSplitter>
+#include <QTreeView>
+#include <QVBoxLayout>
+#include <QWidget>
+#include <QTranslator>
+#include <QDialog>
+#include <QLabel>
+#include <QDebug>
+#include <QDateTime>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -53,16 +62,21 @@ private slots:
     void pasteFile(QString sourcePath, QString newFilePath);
     void pasteDir(QString sourcePath, QString destinationPath);
     void checkExistance(QString path);
-
+    void on_langButton_clicked();
+    void showProperties();
 
 private:
     Ui::MainWindow *ui;
-    QFileSystemModel *model;
+    QTreeView *treeViewLeft;
+    QTreeView *treeViewRight;
+    QFileSystemModel *modelLeft;
+    QFileSystemModel *modelRight;
     QModelIndex currentIndex;
     QString copyPath;
     QString cutPath;
     QList<QString> selectedRowsBuffer;
     bool isCutOperation = false;
+    QTranslator translator;
 };
 
 class CustomFileSystemModel : public QFileSystemModel {
@@ -100,4 +114,3 @@ public:
 };
 
 #endif // MAINWINDOW_H
-
