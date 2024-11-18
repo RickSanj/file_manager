@@ -456,6 +456,8 @@
  mdp:/opt/homebrew/Cellar/qt@5/5.15.15/lib/QtWidgets.framework/Versions/5/Headers/qtwidgetsglobal.h
  mdp:/opt/homebrew/Cellar/qt@5/5.15.15/lib/QtWidgets.framework/Versions/5/Headers/qwidget.h
 /Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/main.cpp
-/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/CustomFileSystemModel.cpp
+/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/command_line_func.cpp
+ uic:./ui_mainwindow.h
 /Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/mainwindow.cpp
  uic:./ui_mainwindow.h
+/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/CustomFileSystemModel.cpp
