@@ -13,11 +13,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->treeViewRight->installEventFilter(this);
     ui->treeViewRight->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
     ui->langButton->setText("ENG");
-    ui->treeViewLeft->installEventFilter(this);
+
     treeViewLeft = ui->treeViewLeft;
     treeViewRight = ui->treeViewRight;
-
 
     modelLeft = new QFileSystemModel(this);
     modelLeft->setRootPath(QDir::rootPath());
@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     modelRight = new QFileSystemModel(this);
     modelRight->setRootPath(QDir::rootPath());
+
     treeViewRight->setModel(modelRight);
     treeViewRight->setRootIndex(modelRight->index(QDir::homePath()));
 
@@ -35,29 +36,35 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->treeViewLeft->setItemsExpandable(false);
     ui->treeViewRight->setItemsExpandable(false);
+
     ui->treeViewLeft->setRootIsDecorated(false);
     ui->treeViewRight->setRootIsDecorated(false);
+
     ui->lineEdit->setText(QDir::rootPath());
 
     connect(ui->treeViewLeft, &QTreeView::doubleClicked, this, &MainWindow::handleTreeViewDoubleClicked);
     connect(ui->treeViewLeft->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::onSelectionChanged);
-
     ui->treeViewLeft->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeViewLeft, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
 
 
     connect(ui->treeViewRight, &QTreeView::doubleClicked, this, &MainWindow::handleTreeViewDoubleClicked);
     connect(ui->treeViewRight->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::onSelectionChanged);
+    ui->treeViewRight->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->treeViewRight, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
+
+    ui->treeViewLeft->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->treeViewLeft, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
 
     ui->treeViewRight->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeViewRight, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
-    ui->treeViewLeft->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->treeViewLeft, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
-    // next maybe remove later
-    ui->treeViewRight->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->treeViewRight, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
+
     treeViewLeft->setSortingEnabled(true);
     treeViewRight->setSortingEnabled(true);
+
+    treeViewLeft->setFocusPolicy(Qt::StrongFocus);
+    treeViewRight->setFocusPolicy(Qt::StrongFocus);
+
 
     treeViewLeft->sortByColumn(0, Qt::AscendingOrder);
     treeViewRight->sortByColumn(0, Qt::AscendingOrder);
@@ -99,7 +106,6 @@ void MainWindow::on_lineEdit_returnPressed(){
     }
 }
 
-
 void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index) {
     QTreeView *senderTreeView = qobject_cast<QTreeView *>(sender());
     QFileSystemModel *model = nullptr;
@@ -124,7 +130,6 @@ void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index) {
 
     selectedRowsBuffer.clear();
 }
-
 
 void MainWindow::showProperties() {
     // Determine which tree view is active
@@ -172,7 +177,6 @@ void MainWindow::showProperties() {
     dialog->setLayout(layout);
     dialog->exec();
 }
-
 
 void MainWindow::handleCustomContextMenuRequested(const QPoint &pos) {
     // Determine which tree view triggered the context menu
@@ -231,13 +235,10 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos) {
     contextMenu.exec(treeView->viewport()->mapToGlobal(pos));
 }
 
-
-
 void MainWindow::handleCopyTriggered() {
     QTreeView *activeTreeView = nullptr;
     QFileSystemModel *activeModel = nullptr;
 
-    // Determine the active tree view and model
     if (ui->treeViewLeft->hasFocus()) {
         activeTreeView = ui->treeViewLeft;
         activeModel = modelLeft;
@@ -251,23 +252,8 @@ void MainWindow::handleCopyTriggered() {
         return;
     }
 
-    QModelIndex selectedIndex = activeTreeView->currentIndex();
 
-    if (!selectedIndex.isValid()) {
-        QMessageBox::warning(this, tr("Copy"), tr("No file or directory selected."));
-        return;
-    }
-
-    QString sourcePath = activeModel->filePath(selectedIndex);
-    QFileInfo fileInfo(sourcePath);
-
-    if (!fileInfo.exists()) {
-        QMessageBox::warning(this, tr("Copy"), tr("The selected file or directory does not exist."));
-        return;
-    }
-
-    // Update buffer with the selected file path
-    selectedRowsBuffer = QStringList{sourcePath};
+    selectedRowsBuffer = getSelectedFilePaths();
 }
 
 void MainWindow::handleCutTriggered() {
@@ -323,6 +309,7 @@ void MainWindow::handlePasteTriggered() {
 }
 
 void MainWindow::handleDeleteTriggered(){
+    selectedRowsBuffer = getSelectedFilePaths();
 
     for(auto path : selectedRowsBuffer){
         QFileInfo fileInfo(path);
@@ -382,7 +369,6 @@ void MainWindow::handleRenameTriggered(){
     }
 }
 
-
 void MainWindow::handleOpenActionTriggered() {
     QModelIndex index = currentIndex;
     if (!index.isValid()) {
@@ -391,6 +377,7 @@ void MainWindow::handleOpenActionTriggered() {
     }
     handleTreeViewDoubleClicked(index);
 }
+
 bool MainWindow::copyDirectory(QDir sourceDir, QDir targetDir){
     if (!targetDir.exists()) {
         targetDir.mkdir(targetDir.path());
@@ -476,7 +463,6 @@ void MainWindow::checkExistance(QString path){
         }
     }
 }
-
 
 bool MainWindow::eventFilter(QObject *object, QEvent *event) {
     QTreeView *activeTreeView = nullptr;
@@ -672,7 +658,6 @@ void MainWindow::on_langButton_clicked(){
     QString currentText = ui->langButton->text();
 
     if (currentText == "ENG") {
-       // qDebug() << "Current working directory:" << QDir::currentPath();
         if (translator.load("../../translation_ukr.qm")) {
             qApp->installTranslator(&translator);
             ui->retranslateUi(this);
@@ -681,14 +666,10 @@ void MainWindow::on_langButton_clicked(){
             qDebug() << "Failed to load translation file.";
         }
         ui->langButton->setText("УКР");
-
-    }
-    else {
-
+    } else {
         qApp->removeTranslator(&translator);
         ui->retranslateUi(this);
         ui->langButton->setText("ENG");
-
     }
 
 }
