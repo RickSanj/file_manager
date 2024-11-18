@@ -156,8 +156,6 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
 
             handleDeleteTriggered();
 
-            //activeTreeView->reset();
-
 
             activeTreeView->setRootIndex(activeModel->index(parentDirPath));
             ui->lineEdit->setText(parentDirPath);
