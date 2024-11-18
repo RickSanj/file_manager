@@ -1,5 +1,7 @@
 C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/EWIEGA46WW/moc_mainwindow.cpp: C:/Users/Elena/Documents/os_project/file_manager/FileManager/mainwindow.h \
   C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/moc_predefs.h \
+  C:/Qt/6.8.0/mingw_64/include/QtCore/QDateTime \
+  C:/Qt/6.8.0/mingw_64/include/QtCore/QDebug \
   C:/Qt/6.8.0/mingw_64/include/QtCore/QDir \
   C:/Qt/6.8.0/mingw_64/include/QtCore/QFile \
   C:/Qt/6.8.0/mingw_64/include/QtCore/QFileInfo \
@@ -386,7 +388,6 @@ C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_
   C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iomanip \
   C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/ios \
   C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iosfwd \
-  C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iostream \
   C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/istream \
   C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/iterator \
   C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/limits \

@@ -191,11 +191,11 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos) {
         connect(openAction, &QAction::triggered, this, &MainWindow::handleOpenActionTriggered);
     }
 
-    QAction *cutAction = contextMenu.addAction("Cut");
-    QAction *copyAction = contextMenu.addAction("Copy");
-    QAction *pasteAction = contextMenu.addAction("Paste");
-    QAction *deleteAction = contextMenu.addAction("Delete");
-    QAction *renameAction = contextMenu.addAction("Rename");
+    QAction *cutAction = contextMenu.addAction(tr("Cut"));
+    QAction *copyAction = contextMenu.addAction(tr("Copy"));
+    QAction *pasteAction = contextMenu.addAction(tr("Paste"));
+    QAction *deleteAction = contextMenu.addAction(tr("Delete"));
+    QAction *renameAction = contextMenu.addAction(tr("Rename"));
     QAction *propertiesAction = contextMenu.addAction(tr("Properties"));
 
 
