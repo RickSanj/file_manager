@@ -64,6 +64,9 @@ private slots:
     void checkExistance(QString path);
     void on_langButton_clicked();
     void showProperties();
+    void createNew();
+    void createNewFile();
+    void createNewFolder();
 
 private:
     Ui::MainWindow *ui;

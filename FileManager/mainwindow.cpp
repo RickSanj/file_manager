@@ -173,7 +173,6 @@ void MainWindow::showProperties() {
     dialog->exec();
 }
 
-
 void MainWindow::handleCustomContextMenuRequested(const QPoint &pos) {
     // Determine which tree view triggered the context menu
     QTreeView *treeView = qobject_cast<QTreeView *>(sender());
@@ -200,7 +199,7 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos) {
         QAction *openAction = contextMenu.addAction(tr("Open"));
         connect(openAction, &QAction::triggered, this, &MainWindow::handleOpenActionTriggered);
     }
-
+    QAction *newAction = contextMenu.addAction(tr("New"));
     QAction *cutAction = contextMenu.addAction(tr("Cut"));
     QAction *copyAction = contextMenu.addAction(tr("Copy"));
     QAction *pasteAction = contextMenu.addAction(tr("Paste"));
@@ -215,7 +214,9 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos) {
     connect(copyAction, &QAction::triggered, this, &MainWindow::handleCopyTriggered);
     connect(pasteAction, &QAction::triggered, this, &MainWindow::handlePasteTriggered);
     connect(propertiesAction, &QAction::triggered, this, &MainWindow::showProperties);
+    connect(newAction, &QAction::triggered, this, &MainWindow::createNew);
 
+    newAction->setDisabled(true);
     if (copyPath.isEmpty() && !cutAction){
         pasteAction->setDisabled(true);
     }
@@ -225,19 +226,103 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos) {
         copyAction->setDisabled(true);
         deleteAction->setDisabled(true);
         renameAction->setDisabled(true);
+        newAction->setEnabled(true);
     }
 
     // Show the context menu
     contextMenu.exec(treeView->viewport()->mapToGlobal(pos));
 }
 
+void MainWindow::createNew() {
+    QMenu newMenu;
+    QAction *newFileAction = newMenu.addAction(tr("File"));
+    QAction *newFolderAction = newMenu.addAction(tr("Folder"));
+
+    connect(newFileAction, &QAction::triggered, this, &MainWindow::createNewFile);
+    connect(newFolderAction, &QAction::triggered, this, &MainWindow::createNewFolder);
+
+    newMenu.exec(QCursor::pos());
+}
+
+void MainWindow::createNewFile() {
+    QTreeView *activeTreeView = nullptr;
+    QFileSystemModel *activeModel = nullptr;
 
 
+    if (ui->treeViewLeft->hasFocus()) {
+        activeTreeView = ui->treeViewLeft;
+        activeModel = modelLeft;
+    } else if (ui->treeViewRight->hasFocus()) {
+        activeTreeView = ui->treeViewRight;
+        activeModel = modelRight;
+    }
+
+    if (!activeTreeView || !activeModel) {
+        QMessageBox::warning(this, tr("New file"), tr("No panel is active."));
+        return;
+    }
+    QModelIndex currentIndex = activeTreeView->currentIndex();
+    QString currentPath = activeModel->filePath(currentIndex);
+
+    if (currentPath.isEmpty()) {
+        currentPath = activeModel->rootPath();
+    }
+
+    bool ok;
+    QString fileName = QInputDialog::getText(this, tr("Create New File"), tr("Enter file name:"), QLineEdit::Normal, tr("newfile.txt"), &ok);
+
+    if (ok && !fileName.isEmpty()) {
+        QFile file(currentPath + "/" + fileName);
+        if (file.open(QIODevice::WriteOnly)) {
+            file.close();
+            QMessageBox::information(this, tr("Success"), tr("File created successfully."));
+        } else {
+            QMessageBox::warning(this, tr("Error"), tr("Failed to create file."));
+        }
+    }
+}
+
+void MainWindow::createNewFolder() {
+    QTreeView *activeTreeView = nullptr;
+    QFileSystemModel *activeModel = nullptr;
+
+
+    if (ui->treeViewLeft->hasFocus()) {
+        activeTreeView = ui->treeViewLeft;
+        activeModel = modelLeft;
+    } else if (ui->treeViewRight->hasFocus()) {
+        activeTreeView = ui->treeViewRight;
+        activeModel = modelRight;
+    }
+
+    if (!activeTreeView || !activeModel) {
+        QMessageBox::warning(this, tr("New folder"), tr("No panel is active."));
+        return;
+    }
+
+    QModelIndex currentIndex = activeTreeView->currentIndex();
+    QString currentPath = activeModel->filePath(currentIndex);
+
+    if (currentPath.isEmpty()) {
+        currentPath = activeModel->rootPath();
+    }
+
+    bool ok;
+    QString folderName = QInputDialog::getText(this, tr("Create New Folder"), tr("Enter folder name:"), QLineEdit::Normal, tr("NewFolder"), &ok);
+
+    if (ok && !folderName.isEmpty()) {
+        QDir dir(currentPath);
+        if (dir.mkdir(folderName)) {
+            QMessageBox::information(this, tr("Success"), tr("Folder created successfully."));
+        } else {
+            QMessageBox::warning(this, tr("Error"), tr("Failed to create folder."));
+        }
+    }
+}
 void MainWindow::handleCopyTriggered() {
     QTreeView *activeTreeView = nullptr;
     QFileSystemModel *activeModel = nullptr;
 
-    // Determine the active tree view and model
     if (ui->treeViewLeft->hasFocus()) {
         activeTreeView = ui->treeViewLeft;
         activeModel = modelLeft;
@@ -266,7 +351,6 @@ void MainWindow::handleCopyTriggered() {
         return;
     }
 
-    // Update buffer with the selected file path
     selectedRowsBuffer = QStringList{sourcePath};
 }
 
@@ -287,8 +371,11 @@ void MainWindow::handlePasteTriggered() {
         activeTreeView = ui->treeViewRight;
         activeModel = modelRight;
     }
+
+    QModelIndex currentIndex = activeTreeView->currentIndex();
     QString destinationPath = activeModel->filePath(currentIndex);
     QFileInfo destInfo(destinationPath);
+
 
     if (!destInfo.isDir()) {
         destinationPath = activeModel->filePath(activeTreeView->rootIndex());
@@ -306,9 +393,9 @@ void MainWindow::handlePasteTriggered() {
         }
 
         checkExistance(destinationPath + "/" + sourceInfo.fileName());
-
         if (sourceInfo.isFile()) {
             pasteFile(path, destinationPath);
+
         } else if (sourceInfo.isDir()) {
             pasteDir(path, destinationPath);
         }
