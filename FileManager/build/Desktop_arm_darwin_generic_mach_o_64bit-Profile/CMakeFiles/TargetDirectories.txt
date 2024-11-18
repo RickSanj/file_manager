@@ -1,8 +1,0 @@
-/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/build/Desktop_arm_darwin_generic_mach_o_64bit-Profile/CMakeFiles/FileManager.dir
-/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/build/Desktop_arm_darwin_generic_mach_o_64bit-Profile/CMakeFiles/edit_cache.dir
-/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/build/Desktop_arm_darwin_generic_mach_o_64bit-Profile/CMakeFiles/rebuild_cache.dir
-/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/build/Desktop_arm_darwin_generic_mach_o_64bit-Profile/CMakeFiles/list_install_components.dir
-/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/build/Desktop_arm_darwin_generic_mach_o_64bit-Profile/CMakeFiles/install.dir
-/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/build/Desktop_arm_darwin_generic_mach_o_64bit-Profile/CMakeFiles/install/local.dir
-/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/build/Desktop_arm_darwin_generic_mach_o_64bit-Profile/CMakeFiles/install/strip.dir
-/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/build/Desktop_arm_darwin_generic_mach_o_64bit-Profile/CMakeFiles/FileManager_autogen.dir
