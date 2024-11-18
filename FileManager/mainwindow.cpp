@@ -337,11 +337,11 @@ void MainWindow::handlePasteTriggered() {
         QFileInfo sourceInfo(path);
 
         if (!QFile::exists(path)) {
-            QMessageBox::warning(this, "Error", "Source file does not exist.");
+            QMessageBox::warning(this, tr("Error"), tr("Source file does not exist."));
             return;
         }
         if (path.isEmpty()) {
-            QMessageBox::warning(this, "Paste", "No source file or directory to paste.");
+            QMessageBox::warning(this, tr("Paste"), tr("No source file or directory to paste."));
             return;
         }
 
@@ -369,17 +369,17 @@ void MainWindow::handleDeleteTriggered(){
     for(auto path : selectedRowsBuffer){
         QFileInfo fileInfo(path);
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, "Delete", "Are you sure you want to delete this?",
+        reply = QMessageBox::question(this, tr("Delete"), tr("Are you sure you want to delete this?"),
                                       QMessageBox::Yes | QMessageBox::No);
         if (reply == QMessageBox::Yes) {
             if (fileInfo.isFile()) {
                 if (!QFile::remove(path)) {
-                    QMessageBox::warning(this, "Delete", "Failed to delete file.");
+                    QMessageBox::warning(this, tr("Delete"), tr("Failed to delete file."));
                 }
             } else if (fileInfo.isDir()) {
                 QDir dir(path);
                 if (!dir.removeRecursively()) {
-                    QMessageBox::warning(this, "Delete", "Failed to delete directory.");
+                    QMessageBox::warning(this, tr("Delete"), tr("Failed to delete directory."));
                 }
             }
         }
@@ -428,7 +428,7 @@ void MainWindow::handleRenameTriggered(){
 void MainWindow::handleOpenActionTriggered() {
     QModelIndex index = currentIndex;
     if (!index.isValid()) {
-        QMessageBox::warning(this, "Open", "No file or directory selected.");
+        QMessageBox::warning(this, tr("Open"), tr("No file or directory selected."));
         return;
     }
     handleTreeViewDoubleClicked(index);
@@ -469,12 +469,12 @@ void MainWindow::pasteFile(QString sourcePath, QString destinationPath){
 
     if (isCutOperation) {
         if (!QFile::rename(sourcePath, newFilePath)) {
-            QMessageBox::warning(this, "Paste", "Failed to move the file.");
+            QMessageBox::warning(this, tr("Paste"), tr("Failed to move the file."));
             return;
         }
     } else {
         if (!QFile::copy(sourcePath, newFilePath)) {
-            QMessageBox::warning(this, "Paste", "Failed to copy the file.");
+            QMessageBox::warning(this, tr("Paste"), tr("Failed to copy the file."));
             return;
         }
     }
@@ -490,12 +490,12 @@ void MainWindow::pasteDir(QString sourcePath, QString destinationPath){
 
     if (isCutOperation) {
         if (!sourceDir.rename(sourceDir.path(), targetPathWithSourceDir)) {
-            QMessageBox::warning(this, "Paste", "Failed to move the directory.");
+            QMessageBox::warning(this, tr("Paste"), tr("Failed to move the directory."));
             return;
         }
     } else {
         if (!copyDirectory(sourceDir, newTargetDir)) {
-            QMessageBox::warning(this, "Paste", "Failed to copy the directory.");
+            QMessageBox::warning(this, tr("Paste"), tr("Failed to copy the directory."));
             return;
         }
     }
@@ -507,7 +507,7 @@ void MainWindow::checkExistance(QString path){
 
     if (QFile::exists(path)) {
         QMessageBox::StandardButton reply = QMessageBox::question(
-            this, "Overwrite File", "The file or directory already exists. Do you want to overwrite it?",
+            this, tr("Overwrite File"), tr("The file or directory already exists. Do you want to overwrite it?"),
             QMessageBox::Yes | QMessageBox::No
             );
 
@@ -626,16 +626,16 @@ void MainWindow::changeDirectory(const QString &path) {
             QString parentPath = dir.absolutePath();
             ui->treeViewLeft->setRootIndex(modelLeft->index(parentPath));
             ui->label->setText(parentPath);
-            statusBar()->showMessage("Moved to parent directory.");
+            statusBar()->showMessage(tr("Moved to parent directory."));
         } else {
-            statusBar()->showMessage("Error: Unable to move to parent directory.");
+            statusBar()->showMessage(tr("Error: Unable to move to parent directory."));
         }
     } else if (targetInfo.isDir() && targetInfo.exists()) {
         ui->treeViewLeft->setRootIndex(modelLeft->index(fullPath));
         ui->label->setText(fullPath);
-        statusBar()->showMessage("Moved to directory.");
+        statusBar()->showMessage(tr("Moved to directory."));
     } else {
-        statusBar()->showMessage("Error: Directory does not exist.");
+        statusBar()->showMessage(tr("Error: Directory does not exist."));
     }
 }
 
@@ -646,9 +646,9 @@ void MainWindow::createDirectory(const QString &dirName) {
     QString rootPath = modelLeft->filePath(rootIndex);
     QDir dir(rootPath);
     if (dir.mkdir(dirName)) {
-        statusBar()->showMessage("Directory created successfully.");
+        statusBar()->showMessage(tr("Directory created successfully."));
     } else {
-        statusBar()->showMessage("Error: Unable to create directory.");
+        statusBar()->showMessage(tr("Error: Unable to create directory."));
     }
 }
 
@@ -664,20 +664,20 @@ void MainWindow::removeFileOrDirectory(const QString &target) {
         if (targetInfo.isFile()) {
             QFile file(fullPath);
             if (file.remove()) {
-                statusBar()->showMessage("File removed successfully.");
+                statusBar()->showMessage(tr("File removed successfully."));
             } else {
-                statusBar()->showMessage("Error: Unable to remove file.");
+                statusBar()->showMessage(tr("Error: Unable to remove file."));
             }
         } else if (targetInfo.isDir()) {
             QDir dir(fullPath);
             if (dir.removeRecursively()) {
-                statusBar()->showMessage("Directory removed successfully.");
+                statusBar()->showMessage(tr("Directory removed successfully."));
             } else {
-                statusBar()->showMessage("Error: Unable to remove directory.");
+                statusBar()->showMessage(tr("Error: Unable to remove directory."));
             }
         }
     } else {
-        statusBar()->showMessage("Error: Target does not exist.");
+        statusBar()->showMessage(tr("Error: Target does not exist."));
     }
 }
 
@@ -822,7 +822,7 @@ void MainWindow::on_langButton_clicked(){
     QString currentText = ui->langButton->text();
 
     if (currentText == "ENG") {
-        if (translator.load("../../translation_ukr.qm")) {
+        if (translator.load("../../translation.qm")) {
             qApp->installTranslator(&translator);
             ui->retranslateUi(this);
         }
