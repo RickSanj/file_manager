@@ -73,6 +73,54 @@ build CMakeFiles/FileManager.dir/mainwindow.cpp.obj: CXX_COMPILER__FileManager_u
   OBJECT_DIR = CMakeFiles\FileManager.dir
   OBJECT_FILE_DIR = CMakeFiles\FileManager.dir
 
+build CMakeFiles/FileManager.dir/dirOperations.cpp.obj: CXX_COMPILER__FileManager_unscanned_Debug C$:/Users/Elena/Documents/os_project/file_manager/FileManager/dirOperations.cpp || cmake_object_order_depends_target_FileManager
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\FileManager.dir\dirOperations.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/include -isystem C:/Qt/6.8.0/mingw_64/include/QtCore -isystem C:/Qt/6.8.0/mingw_64/include -isystem C:/Qt/6.8.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.8.0/mingw_64/include/QtWidgets -isystem C:/Qt/6.8.0/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\FileManager.dir
+  OBJECT_FILE_DIR = CMakeFiles\FileManager.dir
+
+build CMakeFiles/FileManager.dir/fileOperations.cpp.obj: CXX_COMPILER__FileManager_unscanned_Debug C$:/Users/Elena/Documents/os_project/file_manager/FileManager/fileOperations.cpp || cmake_object_order_depends_target_FileManager
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\FileManager.dir\fileOperations.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/include -isystem C:/Qt/6.8.0/mingw_64/include/QtCore -isystem C:/Qt/6.8.0/mingw_64/include -isystem C:/Qt/6.8.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.8.0/mingw_64/include/QtWidgets -isystem C:/Qt/6.8.0/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\FileManager.dir
+  OBJECT_FILE_DIR = CMakeFiles\FileManager.dir
+
+build CMakeFiles/FileManager.dir/customMenu.cpp.obj: CXX_COMPILER__FileManager_unscanned_Debug C$:/Users/Elena/Documents/os_project/file_manager/FileManager/customMenu.cpp || cmake_object_order_depends_target_FileManager
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\FileManager.dir\customMenu.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/include -isystem C:/Qt/6.8.0/mingw_64/include/QtCore -isystem C:/Qt/6.8.0/mingw_64/include -isystem C:/Qt/6.8.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.8.0/mingw_64/include/QtWidgets -isystem C:/Qt/6.8.0/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\FileManager.dir
+  OBJECT_FILE_DIR = CMakeFiles\FileManager.dir
+
+build CMakeFiles/FileManager.dir/keyboard.cpp.obj: CXX_COMPILER__FileManager_unscanned_Debug C$:/Users/Elena/Documents/os_project/file_manager/FileManager/keyboard.cpp || cmake_object_order_depends_target_FileManager
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\FileManager.dir\keyboard.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/include -isystem C:/Qt/6.8.0/mingw_64/include/QtCore -isystem C:/Qt/6.8.0/mingw_64/include -isystem C:/Qt/6.8.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.8.0/mingw_64/include/QtWidgets -isystem C:/Qt/6.8.0/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\FileManager.dir
+  OBJECT_FILE_DIR = CMakeFiles\FileManager.dir
+
+build CMakeFiles/FileManager.dir/cmdline.cpp.obj: CXX_COMPILER__FileManager_unscanned_Debug C$:/Users/Elena/Documents/os_project/file_manager/FileManager/cmdline.cpp || cmake_object_order_depends_target_FileManager
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\FileManager.dir\cmdline.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/include -isystem C:/Qt/6.8.0/mingw_64/include/QtCore -isystem C:/Qt/6.8.0/mingw_64/include -isystem C:/Qt/6.8.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.8.0/mingw_64/include/QtWidgets -isystem C:/Qt/6.8.0/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\FileManager.dir
+  OBJECT_FILE_DIR = CMakeFiles\FileManager.dir
+
+build CMakeFiles/FileManager.dir/multipleOperations.cpp.obj: CXX_COMPILER__FileManager_unscanned_Debug C$:/Users/Elena/Documents/os_project/file_manager/FileManager/multipleOperations.cpp || cmake_object_order_depends_target_FileManager
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\FileManager.dir\multipleOperations.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/include -isystem C:/Qt/6.8.0/mingw_64/include/QtCore -isystem C:/Qt/6.8.0/mingw_64/include -isystem C:/Qt/6.8.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.8.0/mingw_64/include/QtWidgets -isystem C:/Qt/6.8.0/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\FileManager.dir
+  OBJECT_FILE_DIR = CMakeFiles\FileManager.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target FileManager
@@ -81,7 +129,7 @@ build CMakeFiles/FileManager.dir/mainwindow.cpp.obj: CXX_COMPILER__FileManager_u
 #############################################
 # Link the executable FileManager.exe
 
-build FileManager.exe: CXX_EXECUTABLE_LINKER__FileManager_Debug CMakeFiles/FileManager.dir/FileManager_autogen/mocs_compilation.cpp.obj CMakeFiles/FileManager.dir/main.cpp.obj CMakeFiles/FileManager.dir/mainwindow.cpp.obj | C$:/Qt/6.8.0/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.8.0/mingw_64/lib/libQt6Gui.a C$:/Qt/6.8.0/mingw_64/lib/libQt6Core.a C$:/Qt/6.8.0/mingw_64/lib/libQt6EntryPoint.a || FileManager_autogen FileManager_autogen_timestamp_deps
+build FileManager.exe: CXX_EXECUTABLE_LINKER__FileManager_Debug CMakeFiles/FileManager.dir/FileManager_autogen/mocs_compilation.cpp.obj CMakeFiles/FileManager.dir/main.cpp.obj CMakeFiles/FileManager.dir/mainwindow.cpp.obj CMakeFiles/FileManager.dir/dirOperations.cpp.obj CMakeFiles/FileManager.dir/fileOperations.cpp.obj CMakeFiles/FileManager.dir/customMenu.cpp.obj CMakeFiles/FileManager.dir/keyboard.cpp.obj CMakeFiles/FileManager.dir/cmdline.cpp.obj CMakeFiles/FileManager.dir/multipleOperations.cpp.obj | C$:/Qt/6.8.0/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.8.0/mingw_64/lib/libQt6Gui.a C$:/Qt/6.8.0/mingw_64/lib/libQt6Core.a C$:/Qt/6.8.0/mingw_64/lib/libQt6EntryPoint.a || FileManager_autogen FileManager_autogen_timestamp_deps
   FLAGS = -DQT_QML_DEBUG -g
   LINK_FLAGS = -mwindows
   LINK_LIBRARIES = C:/Qt/6.8.0/mingw_64/lib/libQt6Widgets.a  C:/Qt/6.8.0/mingw_64/lib/libQt6Gui.a  C:/Qt/6.8.0/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -lmingw32  C:/Qt/6.8.0/mingw_64/lib/libQt6EntryPoint.a  -lshell32  -ld3d11  -ldxgi  -ldxguid  -ld3d12  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32

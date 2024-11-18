@@ -374,12 +374,42 @@
 	"SOURCES" : 
 	[
 		[
+			"C:/Users/Elena/Documents/os_project/file_manager/FileManager/cmdline.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Elena/Documents/os_project/file_manager/FileManager/customMenu.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Elena/Documents/os_project/file_manager/FileManager/dirOperations.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Elena/Documents/os_project/file_manager/FileManager/fileOperations.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Elena/Documents/os_project/file_manager/FileManager/keyboard.cpp",
+			"MU",
+			null
+		],
+		[
 			"C:/Users/Elena/Documents/os_project/file_manager/FileManager/main.cpp",
 			"MU",
 			null
 		],
 		[
 			"C:/Users/Elena/Documents/os_project/file_manager/FileManager/mainwindow.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/Elena/Documents/os_project/file_manager/FileManager/multipleOperations.cpp",
 			"MU",
 			null
 		]

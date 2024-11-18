@@ -684,8 +684,14 @@ FileManager_autogen/timestamp: \
 	C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeRCCompiler.cmake \
 	C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeSystem.cmake \
 	C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/FileManager_autogen/moc_predefs.h \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/cmdline.cpp \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/customMenu.cpp \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/dirOperations.cpp \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/fileOperations.cpp \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/keyboard.cpp \
 	C:/Users/Elena/Documents/os_project/file_manager/FileManager/main.cpp \
 	C:/Users/Elena/Documents/os_project/file_manager/FileManager/mainwindow.cpp \
 	C:/Users/Elena/Documents/os_project/file_manager/FileManager/mainwindow.h \
+	C:/Users/Elena/Documents/os_project/file_manager/FileManager/multipleOperations.cpp \
 	C:/Users/Elena/Documents/os_project/file_manager/FileManager/mainwindow.ui \
 	C:/Qt/Tools/CMake_64/bin/cmake.exe
