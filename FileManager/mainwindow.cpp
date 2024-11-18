@@ -50,6 +50,18 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->treeViewRight, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
     ui->treeViewLeft->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeViewLeft, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
+
+    ui->treeViewRight->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->treeViewRight, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
+    treeViewLeft->setSortingEnabled(true);
+    treeViewRight->setSortingEnabled(true);
+
+    treeViewLeft->sortByColumn(0, Qt::AscendingOrder);
+    treeViewRight->sortByColumn(0, Qt::AscendingOrder);
+    treeViewLeft->header()->setSectionsClickable(true);
+    treeViewRight->header()->setSectionsClickable(true);
+    treeViewLeft->header()->setSortIndicatorShown(true);
+    treeViewRight->header()->setSortIndicatorShown(true);
 }
 
 
@@ -153,11 +165,11 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos) {
         connect(openAction, &QAction::triggered, this, &MainWindow::handleOpenActionTriggered);
     }
 
-    QAction *cutAction = contextMenu.addAction("Cut");
-    QAction *copyAction = contextMenu.addAction("Copy");
-    QAction *pasteAction = contextMenu.addAction("Paste");
-    QAction *deleteAction = contextMenu.addAction("Delete");
-    QAction *renameAction = contextMenu.addAction("Rename");
+    QAction *cutAction = contextMenu.addAction(tr("Cut"));
+    QAction *copyAction = contextMenu.addAction(tr("Copy"));
+    QAction *pasteAction = contextMenu.addAction(tr("Paste"));
+    QAction *deleteAction = contextMenu.addAction(tr("Delete"));
+    QAction *renameAction = contextMenu.addAction(tr("Rename"));
     QAction *propertiesAction = contextMenu.addAction(tr("Properties"));
 
 
@@ -272,14 +284,12 @@ void MainWindow::handlePasteTriggered() {
 
 
 void MainWindow::handleDeleteTriggered(){
-    selectedRowsBuffer = getSelectedFilePaths();
 
     for(auto path : selectedRowsBuffer){
         QFileInfo fileInfo(path);
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(this, "Delete", "Are you sure you want to delete this?",
                                       QMessageBox::Yes | QMessageBox::No);
-
         if (reply == QMessageBox::Yes) {
             if (fileInfo.isFile()) {
                 if (!QFile::remove(path)) {
@@ -472,8 +482,6 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
             }
             return true;
         }
-
-
         if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
             onEnterPressed();
             return true;
@@ -485,7 +493,20 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
         }
 
         if (keyEvent->key() == Qt::Key_Delete) {
+            QString currentDirPath = activeModel->filePath(activeTreeView->currentIndex());
+
+            QFileInfo currentDirInfo(currentDirPath);
+            QString parentDirPath = currentDirInfo.absolutePath();
+
+
             handleDeleteTriggered();
+
+            activeTreeView->reset();
+
+
+            activeTreeView->setRootIndex(activeModel->index(parentDirPath));
+            ui->lineEdit->setText(parentDirPath);
+
             return true;
         }
         if (keyEvent->key() == Qt::Key_C && keyEvent->modifiers() == Qt::ControlModifier) {

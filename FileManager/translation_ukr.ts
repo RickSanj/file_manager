@@ -167,5 +167,10 @@
         <source>Failed to paste the directory.</source>
         <translation>Не вдалось вставити папку.</translation>
     </message>
+    <message>
+        <location filename="mainwindow.cpp" line="194"/>
+        <source>Cut</source>
+        <translation>Вирізати</translation>
+    </message>
 </context>
 </TS>
