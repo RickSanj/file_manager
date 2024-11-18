@@ -56,6 +56,16 @@ MainWindow::MainWindow(QWidget *parent)
     // next maybe remove later
     ui->treeViewRight->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeViewRight, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
+    treeViewLeft->setSortingEnabled(true);
+    treeViewRight->setSortingEnabled(true);
+
+    treeViewLeft->sortByColumn(0, Qt::AscendingOrder);
+    treeViewRight->sortByColumn(0, Qt::AscendingOrder);
+    treeViewLeft->header()->setSectionsClickable(true);
+    treeViewRight->header()->setSectionsClickable(true);
+    treeViewLeft->header()->setSortIndicatorShown(true);
+    treeViewRight->header()->setSortIndicatorShown(true);
+
 }
 
 
@@ -313,7 +323,6 @@ void MainWindow::handlePasteTriggered() {
 }
 
 void MainWindow::handleDeleteTriggered(){
-    selectedRowsBuffer = getSelectedFilePaths();
 
     for(auto path : selectedRowsBuffer){
         QFileInfo fileInfo(path);
