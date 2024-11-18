@@ -39,6 +39,7 @@ else()
     else()
         add_executable(FileManager
             ${PROJECT_SOURCES}
+
         )
     endif()
 endif()

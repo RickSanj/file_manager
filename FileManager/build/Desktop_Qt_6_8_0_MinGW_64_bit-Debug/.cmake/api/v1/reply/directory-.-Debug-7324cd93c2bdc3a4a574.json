@@ -17,7 +17,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 63,
+				"line" : 64,
 				"parent" : 0
 			}
 		]
@@ -27,13 +27,10 @@
 		{
 			"backtrace" : 1,
 			"component" : "Unspecified",
-			"destination" : ".",
+			"destination" : "bin",
 			"paths" : 
 			[
-				{
-					"from" : "FileManager.app",
-					"to" : "FileManager.app/Contents/MacOS/FileManager"
-				}
+				"FileManager.exe"
 			],
 			"targetId" : "FileManager::@6890427a1f51a3e7e1df",
 			"targetIndex" : 0,

@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-6358be86fcf81344a84b.json",
+					"jsonFile" : "directory-.-Debug-7324cd93c2bdc3a4a574.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -17,7 +17,8 @@
 					"targetIndexes" : 
 					[
 						0,
-						1
+						1,
+						2
 					]
 				}
 			],
@@ -33,7 +34,8 @@
 					"targetIndexes" : 
 					[
 						0,
-						1
+						1,
+						2
 					]
 				}
 			],
@@ -42,15 +44,22 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "FileManager::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-FileManager-Debug-613adf288758d8ba7f67.json",
+					"jsonFile" : "target-FileManager-Debug-bbbc70647d5d9f8a0829.json",
 					"name" : "FileManager",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "FileManager_autogen::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-FileManager_autogen-Debug-8b1ad45261ff32bda5f2.json",
+					"jsonFile" : "target-FileManager_autogen-Debug-0257724d2d7066557901.json",
 					"name" : "FileManager_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "FileManager_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-FileManager_autogen_timestamp_deps-Debug-2fa3837afc5d554122d0.json",
+					"name" : "FileManager_autogen_timestamp_deps",
 					"projectIndex" : 0
 				}
 			]
@@ -59,12 +68,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager/build/Desktop_arm_darwin_generic_mach_o_64bit-Debug",
-		"source" : "/Users/annamonastirska/Desktop/University/3/os/proj/file_manager/FileManager"
+		"build" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug",
+		"source" : "C:/Users/Elena/Documents/os_project/file_manager/FileManager"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 6
+		"minor" : 7
 	}
 }

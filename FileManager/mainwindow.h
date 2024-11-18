@@ -38,10 +38,8 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
-    void handleSelectPathButtonClicked();
+    // void handleSelectPathButtonClicked();
     void handleTreeViewDoubleClicked(const QModelIndex &index);
-    void on_lineEdit_returnPressed();
     void handleCustomContextMenuRequested(const QPoint &pos);
     QStringList getSelectedFilePaths();
 
@@ -49,12 +47,12 @@ private slots:
     void handleCutTriggered();
     void handleRenameTriggered();
     void handleOpenActionTriggered();
-
     void handleCopyTriggered();
     void handlePasteTriggered();
 
     bool copyDirectory(QDir sourceDir, QDir targetDir);
     bool eventFilter(QObject *object, QEvent *event);
+
     void onEnterPressed();
     void onEscPressed();
     void onSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
@@ -67,6 +65,14 @@ private slots:
     void createNew();
     void createNewFile();
     void createNewFolder();
+
+    void processCommandLine(const QString &input);
+    void navigateToHome();
+    void changeDirectory(const QString &path);
+    void createDirectory(const QString &dirName);
+    void removeFileOrDirectory(const QString &target);
+    void handleFileManagerAction(QTreeView *activeTreeView, QFileSystemModel *activeModel);
+
 
 private:
     Ui::MainWindow *ui;

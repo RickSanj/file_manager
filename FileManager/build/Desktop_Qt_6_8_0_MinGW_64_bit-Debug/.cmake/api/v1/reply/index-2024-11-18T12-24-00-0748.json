@@ -4,38 +4,38 @@
 		"generator" : 
 		{
 			"multiConfig" : false,
-			"name" : "Unix Makefiles"
+			"name" : "Ninja"
 		},
 		"paths" : 
 		{
-			"cmake" : "/opt/homebrew/lib/python3.10/site-packages/cmake/data/bin/cmake",
-			"cpack" : "/opt/homebrew/lib/python3.10/site-packages/cmake/data/bin/cpack",
-			"ctest" : "/opt/homebrew/lib/python3.10/site-packages/cmake/data/bin/ctest",
-			"root" : "/opt/homebrew/lib/python3.10/site-packages/cmake/data/share/cmake-3.27"
+			"cmake" : "C:/Qt/Tools/CMake_64/bin/cmake.exe",
+			"cpack" : "C:/Qt/Tools/CMake_64/bin/cpack.exe",
+			"ctest" : "C:/Qt/Tools/CMake_64/bin/ctest.exe",
+			"root" : "C:/Qt/Tools/CMake_64/share/cmake-3.29"
 		},
 		"version" : 
 		{
 			"isDirty" : false,
 			"major" : 3,
-			"minor" : 27,
-			"patch" : 6,
-			"string" : "3.27.6",
+			"minor" : 29,
+			"patch" : 3,
+			"string" : "3.29.3",
 			"suffix" : ""
 		}
 	},
 	"objects" : 
 	[
 		{
-			"jsonFile" : "codemodel-v2-68d744818fb112be8355.json",
+			"jsonFile" : "codemodel-v2-3ec1467aa2724b6a8369.json",
 			"kind" : "codemodel",
 			"version" : 
 			{
 				"major" : 2,
-				"minor" : 6
+				"minor" : 7
 			}
 		},
 		{
-			"jsonFile" : "cache-v2-823b3671133ec7bf556e.json",
+			"jsonFile" : "cache-v2-5b7982f65e623a464a73.json",
 			"kind" : "cache",
 			"version" : 
 			{
@@ -44,7 +44,7 @@
 			}
 		},
 		{
-			"jsonFile" : "cmakeFiles-v1-a8e8db0e0fa67a4b716b.json",
+			"jsonFile" : "cmakeFiles-v1-d0fc16ffa18318b74b77.json",
 			"kind" : "cmakeFiles",
 			"version" : 
 			{
@@ -57,7 +57,7 @@
 	{
 		"cache-v2" : 
 		{
-			"jsonFile" : "cache-v2-823b3671133ec7bf556e.json",
+			"jsonFile" : "cache-v2-5b7982f65e623a464a73.json",
 			"kind" : "cache",
 			"version" : 
 			{
@@ -67,7 +67,7 @@
 		},
 		"cmakeFiles-v1" : 
 		{
-			"jsonFile" : "cmakeFiles-v1-a8e8db0e0fa67a4b716b.json",
+			"jsonFile" : "cmakeFiles-v1-d0fc16ffa18318b74b77.json",
 			"kind" : "cmakeFiles",
 			"version" : 
 			{
@@ -77,12 +77,12 @@
 		},
 		"codemodel-v2" : 
 		{
-			"jsonFile" : "codemodel-v2-68d744818fb112be8355.json",
+			"jsonFile" : "codemodel-v2-3ec1467aa2724b6a8369.json",
 			"kind" : "codemodel",
 			"version" : 
 			{
 				"major" : 2,
-				"minor" : 6
+				"minor" : 7
 			}
 		}
 	}

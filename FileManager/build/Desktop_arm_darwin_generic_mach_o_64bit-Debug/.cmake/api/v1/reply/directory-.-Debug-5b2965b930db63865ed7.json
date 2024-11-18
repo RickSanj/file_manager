@@ -17,13 +17,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 63,
-				"parent" : 0
-			},
-			{
-				"command" : 0,
-				"file" : 0,
-				"line" : 95,
+				"line" : 64,
 				"parent" : 0
 			}
 		]
@@ -33,24 +27,17 @@
 		{
 			"backtrace" : 1,
 			"component" : "Unspecified",
-			"destination" : "bin",
+			"destination" : ".",
 			"paths" : 
 			[
-				"FileManager.exe"
+				{
+					"from" : "FileManager.app",
+					"to" : "FileManager.app/Contents/MacOS/FileManager"
+				}
 			],
 			"targetId" : "FileManager::@6890427a1f51a3e7e1df",
 			"targetIndex" : 0,
 			"type" : "target"
-		},
-		{
-			"backtrace" : 2,
-			"component" : "Unspecified",
-			"destination" : "C:/Program Files (x86)/FileManager/translations",
-			"paths" : 
-			[
-				"build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/translation_ukr.qm"
-			],
-			"type" : "file"
 		}
 	],
 	"paths" : 
