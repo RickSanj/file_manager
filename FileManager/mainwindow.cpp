@@ -320,7 +320,6 @@ void MainWindow::handleDeleteTriggered(){
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(this, "Delete", "Are you sure you want to delete this?",
                                       QMessageBox::Yes | QMessageBox::No);
-
         if (reply == QMessageBox::Yes) {
             if (fileInfo.isFile()) {
                 if (!QFile::remove(path)) {
@@ -507,8 +506,6 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
             }
             return true;
         }
-
-
         if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
             onEnterPressed();
             return true;
@@ -520,7 +517,20 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
         }
 
         if (keyEvent->key() == Qt::Key_Delete) {
+            QString currentDirPath = activeModel->filePath(activeTreeView->currentIndex());
+
+            QFileInfo currentDirInfo(currentDirPath);
+            QString parentDirPath = currentDirInfo.absolutePath();
+
+
             handleDeleteTriggered();
+
+            activeTreeView->reset();
+
+
+            activeTreeView->setRootIndex(activeModel->index(parentDirPath));
+            ui->lineEdit->setText(parentDirPath);
+
             return true;
         }
         if (keyEvent->key() == Qt::Key_C && keyEvent->modifiers() == Qt::ControlModifier) {
