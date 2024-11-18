@@ -843,4 +843,4 @@ MainWindow::~MainWindow(){
     delete ui;
 }
 
-//end
+//end check
