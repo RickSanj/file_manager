@@ -842,3 +842,5 @@ void MainWindow::on_langButton_clicked(){
 MainWindow::~MainWindow(){
     delete ui;
 }
+
+//end
