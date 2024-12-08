@@ -12,13 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
-# Manually specify the path to QuaZip's CMake config
 find_package(ZLIB REQUIRED)
-
-#set(QuaZip-Qt6_DIR "/opt/homebrew/Cellar/quazip/1.4/lib/cmake/QuaZip-Qt6-1.4")
-#find_package(QuaZip-Qt6 REQUIRED)
-
-
 
 set(QUALIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qua/quazip/1.4")
 
@@ -59,8 +53,6 @@ set_target_properties(FileManager PROPERTIES
 )
 
 include(GNUInstallDirs)
-#"${CMAKE_CURRENT_SOURCE_DIR}/qua/quazip/1.4/include/QuaZip-Qt6-1.4/quazip"
-#/opt/homebrew/Cellar/quazip/1.4/include/quazip
 target_include_directories(FileManager PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/qua/quazip/1.4/include/QuaZip-Qt6-1.4/quazip")
 
 install(TARGETS FileManager
