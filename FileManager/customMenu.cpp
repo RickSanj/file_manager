@@ -19,15 +19,33 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos) {
     QMenu contextMenu(this);
 
     if (fileInfo.isFile()) {
-        QAction *openAction = contextMenu.addAction(tr("Open"));
-        connect(openAction, &QAction::triggered, this, &MainWindow::handleOpenActionTriggered);
+        QString filePath = fileInfo.filePath();
+        QStringList archiveExtensions = {".zip", ".rar", ".7z", ".tar", ".gz"};
+        bool isArchive = false;
+
+        for (const QString &ext : archiveExtensions) {
+            if (filePath.endsWith(ext, Qt::CaseInsensitive)) {
+                isArchive = true;
+                break;
+            }
+        }
+
+        if (isArchive) {
+            QAction *extractAction = contextMenu.addAction(tr("Extract"));
+            connect(extractAction, &QAction::triggered, this, &MainWindow::handleExtraction);
+        } else {
+            QAction *openAction = contextMenu.addAction(tr("Open"));
+            connect(openAction, &QAction::triggered, this, &MainWindow::handleOpenActionTriggered);
+        }
     }
+
     QAction *newAction = contextMenu.addAction(tr("New"));
     QAction *cutAction = contextMenu.addAction(tr("Cut"));
     QAction *copyAction = contextMenu.addAction(tr("Copy"));
     QAction *pasteAction = contextMenu.addAction(tr("Paste"));
     QAction *deleteAction = contextMenu.addAction(tr("Delete"));
     QAction *renameAction = contextMenu.addAction(tr("Rename"));
+    QAction *zipAction = contextMenu.addAction(tr("Compress"));
     QAction *propertiesAction = contextMenu.addAction(tr("Properties"));
 
 
@@ -38,6 +56,7 @@ void MainWindow::handleCustomContextMenuRequested(const QPoint &pos) {
     connect(pasteAction, &QAction::triggered, this, &MainWindow::handlePasteTriggered);
     connect(propertiesAction, &QAction::triggered, this, &MainWindow::showProperties);
     connect(newAction, &QAction::triggered, this, &MainWindow::createNew);
+    connect(zipAction, &QAction::triggered, this, &MainWindow::handleCompression);
 
     newAction->setDisabled(true);
     if (copyPath.isEmpty() && !cutAction){

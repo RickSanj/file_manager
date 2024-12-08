@@ -15,9 +15,14 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 # Manually specify the path to QuaZip's CMake config
 find_package(ZLIB REQUIRED)
 
-set(QuaZip-Qt6_DIR "/opt/homebrew/Cellar/quazip/1.4/lib/cmake/QuaZip-Qt6-1.4")
-find_package(QuaZip-Qt6 REQUIRED)
+#set(QuaZip-Qt6_DIR "/opt/homebrew/Cellar/quazip/1.4/lib/cmake/QuaZip-Qt6-1.4")
+#find_package(QuaZip-Qt6 REQUIRED)
 
+
+
+set(QUALIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qua/quazip/1.4")
+
+include_directories(${QUALIB_DIR}/include)
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
@@ -45,21 +50,6 @@ else()
     endif()
 endif()
 
-# Link against Qt and QuaZip libraries
-#link_directories("/opt/homebrew/Cellar/quazip/1.4/lib")
-#target_link_libraries(FileManager PRIVATE Qt${QT_VERSION_MAJOR}::Widgets /opt/homebrew/Cellar/quazip/1.4/lib/libquazip1-qt6.dylib)
-#target_link_libraries(FileManager PRIVATE Qt${QT_VERSION_MAJOR}::Widgets QuaZip-Qt6 ZLIB::ZLIB)
-target_link_libraries(FileManager PRIVATE
-        Qt${QT_VERSION_MAJOR}::Widgets
-        /opt/homebrew/Cellar/quazip/1.4/lib/libquazip1-qt6.dylib
-        ZLIB::ZLIB
-)
-
-# Set properties for macOS bundle
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-    set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.FileManager)
-endif()
-
 set_target_properties(FileManager PROPERTIES
         ${BUNDLE_ID_OPTION}
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -69,16 +59,36 @@ set_target_properties(FileManager PROPERTIES
 )
 
 include(GNUInstallDirs)
-
-target_include_directories(FileManager PRIVATE /opt/homebrew/Cellar/quazip/1.4/include/quazip)
+#"${CMAKE_CURRENT_SOURCE_DIR}/qua/quazip/1.4/include/QuaZip-Qt6-1.4/quazip"
+#/opt/homebrew/Cellar/quazip/1.4/include/quazip
+target_include_directories(FileManager PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/qua/quazip/1.4/include/QuaZip-Qt6-1.4/quazip")
 
 install(TARGETS FileManager
         BUNDLE DESTINATION .
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
+target_link_libraries(FileManager PRIVATE Qt6::Widgets)
+
+if (WIN32)
+    target_link_libraries(FileManager PRIVATE ${QUALIB_DIR}/lib/quazip.dll
+    )
+else()
+    target_link_libraries(FileManager PRIVATE
+            Qt${QT_VERSION_MAJOR}::Widgets
+            ${QUALIB_DIR}/lib/libquazip1-qt6.dylib
+            ZLIB::ZLIB
+    )
+endif()
+
+# Set properties for macOS bundle
+if(${QT_VERSION} VERSION_LESS 6.1.0)
+    set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.FileManager)
+endif()
+
+
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(FileManager)
 endif()
-

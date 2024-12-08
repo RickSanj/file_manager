@@ -24,6 +24,11 @@
 #include <QLabel>
 #include <QDebug>
 #include <QDateTime>
+#include <quazip.h>
+#include <quazipfile.h>
+
+#include <quazip/quazip.h>
+#include <quazip/quazipfile.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -65,6 +70,9 @@ private slots:
     void createNew();
     void createNewFile();
     void createNewFolder();
+    void handleCompression();
+    void handleExtraction();
+    bool addFileToZip(const QString &filePath, QuaZip &zip, QuaZipFile &outFile, const QString &basePath = QString());
 
     void processCommandLine(const QString &input);
     void navigateToHome();
