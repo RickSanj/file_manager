@@ -18,6 +18,10 @@ set(PROJECT_SOURCES
         mainwindow.ui
 )
 
+set(QUALIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qua/quazip/1.4")
+
+include_directories(${QUALIB_DIR}/include)
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(FileManager
         MANUAL_FINALIZATION
@@ -48,10 +52,8 @@ else()
         )
     endif()
 endif()
-#add_subdirectory(quazip-1.4/quazip/)
-#find_package(ZLIB REQUIRED)
 
-#target_link_libraries(FileManager PRIVATE ZLIB::ZLIB)
+target_link_libraries(FileManager PRIVATE ${QUALIB_DIR}/lib/quazip.dll)
 
 target_link_libraries(FileManager PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 #target_link_libraries(FileManager PRIVATE quazip)
