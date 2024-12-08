@@ -120,6 +120,7 @@ void MainWindow::handleCompression() {
     }
 }
 
+
 bool MainWindow::addFileToZip(const QString &filePath, QuaZip &zip, QuaZipFile &outFile, const QString &basePath) {
     QFile inputFile(filePath);
     if (!inputFile.open(QIODevice::ReadOnly)) {
