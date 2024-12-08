@@ -55,7 +55,6 @@ target_link_libraries(FileManager PRIVATE
         ZLIB::ZLIB
 )
 
-
 # Set properties for macOS bundle
 if(${QT_VERSION} VERSION_LESS 6.1.0)
     set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.FileManager)
