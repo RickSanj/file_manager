@@ -15,7 +15,6 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
-
         mainwindow.ui
 )
 
@@ -49,9 +48,13 @@ else()
         )
     endif()
 endif()
+#add_subdirectory(quazip-1.4/quazip/)
+#find_package(ZLIB REQUIRED)
+
+#target_link_libraries(FileManager PRIVATE ZLIB::ZLIB)
 
 target_link_libraries(FileManager PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-
+#target_link_libraries(FileManager PRIVATE quazip)
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
