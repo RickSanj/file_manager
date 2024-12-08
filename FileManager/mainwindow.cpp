@@ -112,9 +112,8 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
         activeModel = modelRight;
     }
 
-    if ((object == treeViewLeft || object == treeViewRight) && event->type() == QEvent::KeyPress) {
+    if ((object == ui->treeViewLeft || object == ui->treeViewRight) && event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-
 
         if (keyEvent->modifiers() == Qt::ShiftModifier &&
             (keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_Down)) {
@@ -130,9 +129,9 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
 
             if (nextIndex.isValid()) {
                 activeTreeView->selectionModel()->select(
-                    QItemSelection(currentIndex, nextIndex),
-                    QItemSelectionModel::Select
-                    );
+                        QItemSelection(currentIndex, nextIndex),
+                        QItemSelectionModel::Select
+                );
                 activeTreeView->setCurrentIndex(nextIndex);
             }
             return true;
@@ -147,38 +146,57 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
             return true;
         }
 
+#ifdef Q_OS_MAC
+        if (keyEvent->key() == Qt::Key_Backspace || keyEvent->key() == Qt::Key_Delete) {
+#else
         if (keyEvent->key() == Qt::Key_Delete) {
+#endif
             QString currentDirPath = activeModel->filePath(activeTreeView->currentIndex());
 
             QFileInfo currentDirInfo(currentDirPath);
             QString parentDirPath = currentDirInfo.absolutePath();
 
-
             handleDeleteTriggered();
-
 
             activeTreeView->setRootIndex(activeModel->index(parentDirPath));
             ui->lineEdit->setText(parentDirPath);
 
             return true;
         }
-        if (keyEvent->key() == Qt::Key_C && keyEvent->modifiers() == Qt::ControlModifier) {
+
+        // Handle Copy
+#ifdef Q_OS_MAC
+        if (keyEvent->key() == Qt::Key_C && keyEvent->modifiers() == Qt::MetaModifier) {
+#else
+            if (keyEvent->key() == Qt::Key_C && keyEvent->modifiers() == Qt::ControlModifier) {
+#endif
             handleCopyTriggered();
             return true;
         }
-        if (keyEvent->key() == Qt::Key_V && keyEvent->modifiers() == Qt::ControlModifier) {
+
+        // Handle Paste
+#ifdef Q_OS_MAC
+        if (keyEvent->key() == Qt::Key_V && keyEvent->modifiers() == Qt::MetaModifier) {
+#else
+            if (keyEvent->key() == Qt::Key_V && keyEvent->modifiers() == Qt::ControlModifier) {
+#endif
             handlePasteTriggered();
             return true;
         }
 
-        if (keyEvent->key() == Qt::Key_X && keyEvent->modifiers() == Qt::ControlModifier) {
+        // Handle Cut
+#ifdef Q_OS_MAC
+        if (keyEvent->key() == Qt::Key_X && keyEvent->modifiers() == Qt::MetaModifier) {
+#else
+            if (keyEvent->key() == Qt::Key_X && keyEvent->modifiers() == Qt::ControlModifier) {
+#endif
             handleCutTriggered();
             return true;
         }
-
     }
     return QMainWindow::eventFilter(object, event);
 }
+
 
 
 
