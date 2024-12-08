@@ -80,8 +80,6 @@ if(${QT_VERSION} VERSION_LESS 6.1.0)
     set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.FileManager)
 endif()
 
-
-
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(FileManager)
 endif()
