@@ -53,6 +53,7 @@ set_target_properties(FileManager PROPERTIES
 )
 
 include(GNUInstallDirs)
+
 target_include_directories(FileManager PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/qua/quazip/1.4/include/QuaZip-Qt6-1.4/quazip")
 
 install(TARGETS FileManager
