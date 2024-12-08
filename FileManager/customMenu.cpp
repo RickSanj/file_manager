@@ -219,12 +219,30 @@ void MainWindow::showProperties() {
 }
 
 void MainWindow::handleOpenActionTriggered() {
-    QModelIndex index = currentIndex;
+
+    QTreeView *activeTreeView = nullptr;
+    QFileSystemModel *activeModel = nullptr;
+
+    if (ui->treeViewLeft->hasFocus()) {
+        activeTreeView = ui->treeViewLeft;
+        activeModel = modelLeft;
+    } else if (ui->treeViewRight->hasFocus()) {
+        activeTreeView = ui->treeViewRight;
+        activeModel = modelRight;
+    }
+
+    if (!activeTreeView || !activeModel) {
+        QMessageBox::warning(this, tr("Open"), tr("No panel is active."));
+        return;
+    }
+    QModelIndex index = activeTreeView->currentIndex();
     if (!index.isValid()) {
         QMessageBox::warning(this, tr("Open"), tr("No file or directory selected."));
         return;
     }
-    handleTreeViewDoubleClicked(index);
+   // handleTreeViewDoubleClicked(index);
+    QString path = activeModel->filePath(index);
+    QDesktopServices::openUrl(QUrl::fromLocalFile(path));
 }
 
 void MainWindow::handleDeleteTriggered(){
