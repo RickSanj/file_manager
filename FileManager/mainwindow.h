@@ -27,9 +27,6 @@
 #include <quazip.h>
 #include <quazipfile.h>
 #include "iostream"
-//
-//#include <quazip/quazip.h>
-//#include <quazip/quazipfile.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -42,9 +39,14 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    QLabel *label;
 
 private slots:
-    // void handleSelectPathButtonClicked();
+    void setupTreeViews();
+    void setupModels();
+    void setupLayouts();
+    void setupConnections();
+
     void handleTreeViewDoubleClicked(const QModelIndex &index);
     void handleCustomContextMenuRequested(const QPoint &pos);
     QStringList getSelectedFilePaths();
@@ -75,8 +77,6 @@ private slots:
     void handleExtraction();
     bool addFileToZip(const QString &filePath, QuaZipFile &outFile, const QString &rootPath);
     bool addDirectoryToZip(const QString &dirPath, QuaZipFile *outFile, const QString &rootPath);
-//    bool archive(const QString &zipFilePath, const QDir &dir);
-//    bool addFileToZip(const QString &filePath, QuaZip &zip);
 
     void processCommandLine(const QString &input);
     void navigateToHome();
@@ -84,7 +84,7 @@ private slots:
     void createDirectory(const QString &dirName);
     void removeFileOrDirectory(const QString &target);
     void handleFileManagerAction(QTreeView *activeTreeView, QFileSystemModel *activeModel);
-
+    void on_helpButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -98,40 +98,41 @@ private:
     QList<QString> selectedRowsBuffer;
     bool isCutOperation = false;
     QTranslator translator;
+
 };
-
-class CustomFileSystemModel : public QFileSystemModel {
-    Q_OBJECT
-
-public:
-    explicit CustomFileSystemModel(QObject *parent = nullptr) : QFileSystemModel(parent) {}
-
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override {
-        int count = QFileSystemModel::rowCount(parent);
-        if (!parent.isValid() || !fileInfo(parent).isDir()) {
-            return count;
-        }
-        return count + 1;
-    }
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {
-        if (index.row() == 0 && index.parent() == QModelIndex() && role == Qt::DisplayRole) {
-            return QStringLiteral("../");
-        }
-        return QFileSystemModel::data(this->index(index.row()-1, index.column(), index.parent()), role);
-    }
-
-    // Override index to handle "../" row click
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override {
-        if (row == 0 && parent == QModelIndex()) {
-            return createIndex(row, column);
-        }
-        return QFileSystemModel::index(row, column, parent);
-    }
-
-    bool isUpDirectory(const QModelIndex &index) const {
-        return index.row() == 0 && index.parent() == QModelIndex();
-    }
-};
+//
+//class CustomFileSystemModel : public QFileSystemModel {
+//    Q_OBJECT
+//
+//public:
+//    explicit CustomFileSystemModel(QObject *parent = nullptr) : QFileSystemModel(parent) {}
+//
+//    int rowCount(const QModelIndex &parent = QModelIndex()) const override {
+//        int count = QFileSystemModel::rowCount(parent);
+//        if (!parent.isValid() || !fileInfo(parent).isDir()) {
+//            return count;
+//        }
+//        return count + 1;
+//    }
+//
+//    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {
+//        if (index.row() == 0 && index.parent() == QModelIndex() && role == Qt::DisplayRole) {
+//            return QStringLiteral("../");
+//        }
+//        return QFileSystemModel::data(this->index(index.row()-1, index.column(), index.parent()), role);
+//    }
+//
+//    // Override index to handle "../" row click
+//    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override {
+//        if (row == 0 && parent == QModelIndex()) {
+//            return createIndex(row, column);
+//        }
+//        return QFileSystemModel::index(row, column, parent);
+//    }
+//
+//    bool isUpDirectory(const QModelIndex &index) const {
+//        return index.row() == 0 && index.parent() == QModelIndex();
+//    }
+//};
 
 #endif // MAINWINDOW_H

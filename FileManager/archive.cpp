@@ -47,7 +47,6 @@ void MainWindow::handleExtraction() {
         }
 
         QString outputPath = QDir(extractDir).filePath(fileInfo.name);
-        qDebug() << "outputPath: " + outputPath;
 
         if (fileInfo.name.endsWith('/')) {
             if (!QDir().mkpath(outputPath)) {

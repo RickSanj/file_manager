@@ -19,12 +19,19 @@ void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index) {
             senderTreeView->setRootIndex(model->index(path));
             ui->label->setText(path);
         } else if (fileInfo.isFile()) {
-            QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+            if (fileInfo.suffix().compare("zip", Qt::CaseInsensitive) == 0) {
+                selectedRowsBuffer = QStringList(path);
+                handleExtraction();
+            } else {
+                QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+            }
         }
     }
 
     selectedRowsBuffer.clear();
 }
+
+
 void MainWindow::onEnterPressed() {
     if (ui->lineEdit->hasFocus()) {
         processCommandLine(ui->lineEdit->text().trimmed());
@@ -44,7 +51,6 @@ void MainWindow::onEnterPressed() {
     if (activeTreeView && activeModel) {
         handleFileManagerAction(activeTreeView, activeModel);
     }
-
 }
 
 
@@ -73,7 +79,8 @@ void MainWindow::onEscPressed() {
 
         if (fileInfo.isDir()) {
             activeTreeView->setRootIndex(activeModel->index(fileInfo.absoluteFilePath()));
-            ui->lineEdit->setText(fileInfo.absoluteFilePath());
+            ui->label->setText(fileInfo.absoluteFilePath());
+//            ui->lineEdit->setText(fileInfo.absoluteFilePath());
         } else if (fileInfo.isFile()) {
             QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
         }

@@ -4,21 +4,48 @@
 QTranslator translator;
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+        : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // Initialize UI components
+    setupTreeViews();
+    setupModels();
+    setupLayouts();
+    setupConnections();
+}
+
+void MainWindow::setupTreeViews()
+{
     ui->treeViewLeft->installEventFilter(this);
     ui->treeViewLeft->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    ui->treeViewLeft->setItemsExpandable(false);
+    ui->treeViewLeft->setRootIsDecorated(false);
+    ui->treeViewLeft->setContextMenuPolicy(Qt::CustomContextMenu);
 
     ui->treeViewRight->installEventFilter(this);
     ui->treeViewRight->setSelectionMode(QAbstractItemView::ExtendedSelection);
-
-    ui->langButton->setText("ENG");
+    ui->treeViewRight->setItemsExpandable(false);
+    ui->treeViewRight->setRootIsDecorated(false);
+    ui->treeViewRight->setContextMenuPolicy(Qt::CustomContextMenu);
 
     treeViewLeft = ui->treeViewLeft;
     treeViewRight = ui->treeViewRight;
 
+    treeViewLeft->setSortingEnabled(true);
+    treeViewRight->setSortingEnabled(true);
+    treeViewLeft->setFocusPolicy(Qt::StrongFocus);
+    treeViewRight->setFocusPolicy(Qt::StrongFocus);
+    treeViewLeft->sortByColumn(0, Qt::AscendingOrder);
+    treeViewRight->sortByColumn(0, Qt::AscendingOrder);
+    treeViewLeft->header()->setSectionsClickable(true);
+    treeViewRight->header()->setSectionsClickable(true);
+    treeViewLeft->header()->setSortIndicatorShown(true);
+    treeViewRight->header()->setSortIndicatorShown(true);
+}
+
+void MainWindow::setupModels()
+{
     modelLeft = new QFileSystemModel(this);
     modelLeft->setFilter(modelLeft->filter() & ~QDir::Filter::NoDotDot);
     modelLeft->setRootPath(QDir::rootPath());
@@ -28,57 +55,68 @@ MainWindow::MainWindow(QWidget *parent)
     modelRight = new QFileSystemModel(this);
     modelRight->setFilter(modelRight->filter() & ~QDir::Filter::NoDotDot);
     modelRight->setRootPath(QDir::rootPath());
-
     treeViewRight->setModel(modelRight);
     treeViewRight->setRootIndex(modelRight->index(QDir::homePath()));
+}
 
+void MainWindow::setupLayouts()
+{
+    QPushButton *helpButton = new QPushButton("Help", this);
+    QPushButton *langButton = new QPushButton("ENG", this);
+    QLineEdit *lineEdit = new QLineEdit(QDir::rootPath(), this);
+    QLabel *bottomLabel = new QLabel("Path:", this);
 
+    QVBoxLayout *mainLayout = new QVBoxLayout();
+    QHBoxLayout *topLayout = new QHBoxLayout();
+    QHBoxLayout *labelLayout = new QHBoxLayout();
+    QHBoxLayout *commandLineLayout = new QHBoxLayout();
+    QSplitter *splitter = new QSplitter(this);
+
+    splitter->addWidget(treeViewLeft);
+    splitter->addWidget(treeViewRight);
+    splitter->setOrientation(Qt::Horizontal);
+
+    topLayout->addWidget(helpButton);
+    topLayout->addWidget(langButton);
+    labelLayout->addWidget(bottomLabel);
+    commandLineLayout->addWidget(lineEdit);
+
+    mainLayout->addLayout(topLayout, 1);          // 10%
+    mainLayout->addWidget(splitter, 7);           // 70%
+    mainLayout->addLayout(labelLayout, 1);        // 10%
+    mainLayout->addLayout(commandLineLayout, 1);  // 10%
+
+    QWidget *centralWidget = new QWidget(this);
+    centralWidget->setLayout(mainLayout);
+    setCentralWidget(centralWidget);
+
+    this->ui->lineEdit = lineEdit;
+    this->ui->helpButton = helpButton;
+    this->ui->langButton = langButton;
+    ui->label = bottomLabel;
+}
+
+void MainWindow::setupConnections()
+{
     connect(treeViewLeft, &QTreeView::doubleClicked, this, &MainWindow::handleTreeViewDoubleClicked);
     connect(treeViewRight, &QTreeView::doubleClicked, this, &MainWindow::handleTreeViewDoubleClicked);
+
+    // Connect treeView selection changes
+    connect(treeViewLeft->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::onSelectionChanged);
+    connect(treeViewRight->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::onSelectionChanged);
+
+    // Connect treeView context menu events
+    connect(treeViewLeft, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
+    connect(treeViewRight, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
+
+    // Connect button events
+    connect(ui->helpButton, &QPushButton::clicked, this, &MainWindow::on_helpButton_clicked);
+    connect(ui->langButton, &QPushButton::clicked, this, &MainWindow::on_langButton_clicked);
+
+    // Connect lineEdit events
     connect(ui->lineEdit, &QLineEdit::returnPressed, this, &MainWindow::onEnterPressed);
-
-    ui->treeViewLeft->setItemsExpandable(false);
-    ui->treeViewRight->setItemsExpandable(false);
-
-    ui->treeViewLeft->setRootIsDecorated(false);
-    ui->treeViewRight->setRootIsDecorated(false);
-
-    ui->lineEdit->setText(QDir::rootPath());
-
-    ui->label->setText(QDir::rootPath());
-
-    connect(ui->treeViewLeft->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::onSelectionChanged);
-
-    ui->treeViewLeft->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->treeViewLeft, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
-
-
-    connect(ui->treeViewRight, &QTreeView::doubleClicked, this, &MainWindow::handleTreeViewDoubleClicked);
-    connect(ui->treeViewRight->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::onSelectionChanged);
-    ui->treeViewRight->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->treeViewRight, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
-
-    ui->treeViewLeft->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->treeViewLeft, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
-
-    ui->treeViewRight->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->treeViewRight, &QTreeView::customContextMenuRequested, this, &MainWindow::handleCustomContextMenuRequested);
-
-    treeViewLeft->setSortingEnabled(true);
-    treeViewRight->setSortingEnabled(true);
-
-    treeViewLeft->setFocusPolicy(Qt::StrongFocus);
-    treeViewRight->setFocusPolicy(Qt::StrongFocus);
-
-
-    treeViewLeft->sortByColumn(0, Qt::AscendingOrder);
-    treeViewRight->sortByColumn(0, Qt::AscendingOrder);
-
-    treeViewLeft->header()->setSectionsClickable(true);
-    treeViewRight->header()->setSectionsClickable(true);
-    treeViewLeft->header()->setSortIndicatorShown(true);
-    treeViewRight->header()->setSortIndicatorShown(true);
 }
+
 
 
 void MainWindow::checkExistance(QString path){
@@ -200,9 +238,6 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event) {
 }
 
 
-
-
-
 void MainWindow::handleFileManagerAction(QTreeView *activeTreeView, QFileSystemModel *activeModel) {
     QModelIndex selectedIndex = activeTreeView->currentIndex();
     if (selectedIndex.isValid()) {
@@ -210,20 +245,51 @@ void MainWindow::handleFileManagerAction(QTreeView *activeTreeView, QFileSystemM
 
         if (fileInfo.isDir()) {
             activeTreeView->setRootIndex(activeModel->index(fileInfo.absoluteFilePath()));
-            ui->lineEdit->setText(fileInfo.absoluteFilePath());
+            ui->label->setText(fileInfo.absoluteFilePath());
         } else if (fileInfo.isFile()) {
             QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
         }
     }
 }
 
+void MainWindow::on_helpButton_clicked() {
+    QDialog helpDialog(this);
+    helpDialog.setWindowTitle(tr("Help"));
+
+    QVBoxLayout *layout = new QVBoxLayout(&helpDialog);
+    QLabel *helpLabel = new QLabel(tr("This file manager application allows you to:"
+                                      "\n"
+                                      "- Navigate directories by double-clicking on folders.\n"
+                                      "- Open files with the default application by double-clicking on them.\n"
+                                      "- Ctrl-c copy files or directories.\n"
+                                      "- Ctrl-x cut files or directories.\n"
+                                      "- Ctrl-v paste files or directories.\n"
+                                      "- Extract ZIP archives by double-clicking on them.\n"
+                                      "- Esc return to parent directory.\n"
+                                      "- Del delete files or directories.\n"
+                                      "- Extract ZIP archives by double-clicking on them.\n"
+                                      "\n"
+                                      "Command line:\n"
+                                      "  cd <dir-path> Set current directory\n"
+                                      "  cp <file_1> <file_2> Copy from file with <file_1> to <file_2>\n"
+                                      "  mv <file_1> <file_2> Move file from <file_1> to <file_2>\n"
+                                      "  rm <path> Remove file or directory\n"
+                                      ), &helpDialog);
+    layout->addWidget(helpLabel);
+
+    QPushButton *okButton = new QPushButton(tr("OK"), &helpDialog);
+    connect(okButton, &QPushButton::clicked, &helpDialog, &QDialog::accept);
+    layout->addWidget(okButton);
+
+    helpDialog.exec();
+}
 
 void MainWindow::on_langButton_clicked(){
-
     QString currentText = ui->langButton->text();
 
     if (currentText == "ENG") {
-        if (translator.load("../../translation.qm")) {
+        ui->label->setText("Path:");
+        if (translator.load("../../../ukrt.qm")) {
             qApp->installTranslator(&translator);
             ui->retranslateUi(this);
         }
@@ -232,11 +298,11 @@ void MainWindow::on_langButton_clicked(){
         }
         ui->langButton->setText("УКР");
     } else {
+        ui->label->setText("Path:");
         qApp->removeTranslator(&translator);
         ui->retranslateUi(this);
         ui->langButton->setText("ENG");
     }
-
 }
 
 
