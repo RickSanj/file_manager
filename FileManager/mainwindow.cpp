@@ -20,11 +20,13 @@ MainWindow::MainWindow(QWidget *parent)
     treeViewRight = ui->treeViewRight;
 
     modelLeft = new QFileSystemModel(this);
+    modelLeft->setFilter(modelLeft->filter() & ~QDir::Filter::NoDotDot);
     modelLeft->setRootPath(QDir::rootPath());
     treeViewLeft->setModel(modelLeft);
     treeViewLeft->setRootIndex(modelLeft->index(QDir::homePath()));
 
     modelRight = new QFileSystemModel(this);
+    modelRight->setFilter(modelRight->filter() & ~QDir::Filter::NoDotDot);
     modelRight->setRootPath(QDir::rootPath());
 
     treeViewRight->setModel(modelRight);
