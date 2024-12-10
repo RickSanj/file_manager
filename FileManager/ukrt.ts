@@ -570,7 +570,11 @@
     <source>The file or directory already exists. Do you want to overwrite it?</source>
     <translation>Файл або директорія вже існують. Бажаєте перезаписати?</translation>
 </message>
-
+<message>
+<location filename="customMenu.cpp" line="237"/>
+    <source>Archive</source>
+    <translation>Архів</translation>
+</message>
 <message>
     <location filename="mainwindow.cpp" line="260"/>
     <source>This file manager application allows you to:

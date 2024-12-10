@@ -230,7 +230,16 @@ void MainWindow::showProperties() {
     layout->addWidget(new QLabel(tr("Name: ") + fileInfo.fileName()));
     layout->addWidget(new QLabel(tr("Path: ") + fileInfo.absoluteFilePath()));
     layout->addWidget(new QLabel(tr("Size: ") + QString::number(fileInfo.size()) + tr(" bytes")));
-    layout->addWidget(new QLabel(QString(tr("Type: ")) + (fileInfo.isDir() ? tr("Folder") : tr("File"))));
+    QString type;
+    if (fileInfo.isDir()) {
+        type = tr("Folder");
+    } else if (fileInfo.suffix() == "zip" || fileInfo.suffix() == "tar" || fileInfo.suffix() == "rar") {
+        type = tr("Archive");
+    } else {
+        type = tr("File");
+    }
+
+    layout->addWidget(new QLabel(QString(tr("Type: ")) + type));
     layout->addWidget(new QLabel(tr("Last Modified: ") + fileInfo.lastModified().toString()));
 
     dialog->setLayout(layout);
