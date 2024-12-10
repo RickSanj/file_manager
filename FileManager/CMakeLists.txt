@@ -12,9 +12,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
+
 find_package(ZLIB REQUIRED)
 
+
+
 set(QUALIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qua/quazip/1.4")
+
 
 include_directories(${QUALIB_DIR}/include)
 set(PROJECT_SOURCES
@@ -61,39 +65,35 @@ install(TARGETS FileManager
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
+
 target_link_libraries(FileManager PRIVATE Qt6::Widgets)
 
-#if (WIN32)
-#    target_link_libraries(FileManager PRIVATE ${QUALIB_DIR}/lib/quazip.dll
-#    )
-#else()
-#    target_link_libraries(FileManager PRIVATE
-#            Qt${QT_VERSION_MAJOR}::Widgets
-#            ${QUALIB_DIR}/lib/libquazip1-qt6.dylib
-#            ZLIB::ZLIB
-#    )
-#endif()
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(FileManager PRIVATE
-            Qt${QT_VERSION_MAJOR}::Widgets
-            ${QUALIB_DIR}/lib/quazip.dll
+        Qt${QT_VERSION_MAJOR}::Widgets
+        ${QUALIB_DIR}/lib/quazip.dll
+        Qt${QT_VERSION_MAJOR}::Core
     )
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(QuaZip-Qt6_DIR /usr/local/lib/cmake/QuaZip-Qt6-1.4)  # set here your path to QuaZip
+    find_package(QuaZip-Qt6 REQUIRED)
     target_link_libraries(FileManager PRIVATE
-            Qt${QT_VERSION_MAJOR}::Widgets
-            ${QUALIB_DIR}/lib/libquazip1-qt6.so
-            ZLIB::ZLIB
+        Qt${QT_VERSION_MAJOR}::Widgets
+        QuaZip::QuaZip
+        ZLIB::ZLIB
     )
+
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin") # macOS
     target_link_libraries(FileManager PRIVATE
-            Qt${QT_VERSION_MAJOR}::Widgets
-            ${QUALIB_DIR}/lib/libquazip1-qt6.dylib
-            ZLIB::ZLIB
+        Qt${QT_VERSION_MAJOR}::Widgets
+        ${QUALIB_DIR}/lib/libquazip1-qt6.dylib
+        Qt${QT_VERSION_MAJOR}::Core
+        ZLIB::ZLIB
     )
 else()
     message(FATAL_ERROR "Unsupported platform: ${CMAKE_SYSTEM_NAME}")
 endif()
+
 
 # Set properties for macOS bundle
 if(${QT_VERSION} VERSION_LESS 6.1.0)
