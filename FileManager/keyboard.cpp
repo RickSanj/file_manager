@@ -15,7 +15,12 @@ void MainWindow::handleTreeViewDoubleClicked(const QModelIndex &index) {
         QString path = model->filePath(index);
         QFileInfo fileInfo(path);
 
-        if (fileInfo.isDir()) {
+        if (fileInfo.fileName() == "..") {
+            QDir currentDir(path);
+            QString parentPath = currentDir.absolutePath();
+            senderTreeView->setRootIndex(model->index(path));
+            ui->label->setText(parentPath);
+        } else if (fileInfo.isDir()) {
             senderTreeView->setRootIndex(model->index(path));
             ui->label->setText(path);
         } else if (fileInfo.isFile()) {
@@ -80,7 +85,6 @@ void MainWindow::onEscPressed() {
         if (fileInfo.isDir()) {
             activeTreeView->setRootIndex(activeModel->index(fileInfo.absoluteFilePath()));
             ui->label->setText(fileInfo.absoluteFilePath());
-//            ui->lineEdit->setText(fileInfo.absoluteFilePath());
         } else if (fileInfo.isFile()) {
             QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
         }
