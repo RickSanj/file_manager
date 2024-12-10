@@ -79,9 +79,12 @@ private slots:
     bool addDirectoryToZip(const QString &dirPath, QuaZipFile *outFile, const QString &rootPath);
 
     void processCommandLine(const QString &input);
+    void handleCopyOperation(const QString &arguments);
     void navigateToHome();
     void changeDirectory(const QString &path);
     void createDirectory(const QString &dirName);
+    void handleMoveOperation(QString arguments);
+    bool moveDirectory(const QString &source, const QString &destination);
     void removeFileOrDirectory(const QString &target);
     void handleFileManagerAction(QTreeView *activeTreeView, QFileSystemModel *activeModel);
     void on_helpButton_clicked();

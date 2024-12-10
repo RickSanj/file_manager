@@ -149,3 +149,88 @@ void MainWindow::createNewFolder() {
         }
     }
 }
+
+bool MainWindow::moveDirectory(const QString &source, const QString &destination) {
+    QDir sourceDir(source);
+    if (!sourceDir.exists()) {
+        return false;
+    }
+
+    QDir destinationDir(destination);
+    if (!destinationDir.exists()) {
+        if (!destinationDir.mkpath(destination)) {
+            return false;
+        }
+    }
+
+            foreach (QString fileName, sourceDir.entryList(QDir::Files)) {
+            QString srcFilePath = sourceDir.filePath(fileName);
+            QString destFilePath = destinationDir.filePath(fileName);
+            if (!QFile::rename(srcFilePath, destFilePath)) {
+                return false;
+            }
+        }
+
+            foreach (QString subDirName, sourceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+            QString srcSubDirPath = sourceDir.filePath(subDirName);
+            QString destSubDirPath = destinationDir.filePath(subDirName);
+            if (!moveDirectory(srcSubDirPath, destSubDirPath)) {
+                return false;
+            }
+        }
+
+    return sourceDir.removeRecursively();
+}
+
+void MainWindow::handleMoveOperation(QString arguments){
+    QStringList paths = arguments.split(" ");
+    if (paths.size() != 2) {
+        QMessageBox::warning(this, tr("Error"), tr("Invalid number of arguments for mv."));
+        return;
+    }
+
+    QString sourcePath = paths[0];
+    QString destinationPath = paths[1];
+
+    QString currentPath = ui->label->text();
+    QDir currentDir(currentPath);
+
+    QString fullSourcePath = QDir::isAbsolutePath(sourcePath)
+                             ? QDir::cleanPath(sourcePath)
+                             : QDir::cleanPath(currentPath + QDir::separator() + sourcePath);
+    QString fullDestinationPath = QDir::isAbsolutePath(destinationPath)
+                                  ? QDir::cleanPath(destinationPath)
+                                  : QDir::cleanPath(currentPath + QDir::separator() + destinationPath);
+
+    QFileInfo sourceInfo(fullSourcePath);
+    QFileInfo destInfo(fullDestinationPath);
+
+    if (!sourceInfo.exists()) {
+        QMessageBox::warning(this, tr("Error"), tr("Source file or directory does not exist."));
+        return;
+    }
+
+    if (!destInfo.exists()) {
+        QMessageBox::warning(this, tr("Error"), tr("Destination directory does not exist."));
+        return;
+    }
+
+    // If destination is a directory, append the source file name to it
+    if (destInfo.isDir()) {
+        fullDestinationPath = QDir(fullDestinationPath).filePath(sourceInfo.fileName());
+    }
+
+    if (sourceInfo.isDir()) {
+        if (!moveDirectory(fullSourcePath, fullDestinationPath)) {
+            QMessageBox::warning(this, tr("Error"), tr("Failed to move the directory."));
+            return;
+        }
+    } else {
+        if (!QFile::rename(fullSourcePath, fullDestinationPath)) {
+            QMessageBox::warning(this, tr("Error"), tr("Failed to move the file."));
+            return;
+        }
+    }
+    statusBar()->showMessage(tr("Moved '%1' to '%2'").arg(fullSourcePath, fullDestinationPath));
+}
+
