@@ -6,4 +6,4 @@ across different operating systems such as Linux, Windows, and macOS.
 <br> <br>
 
 Prerequisites <br>
-GCC, CMAKE, ZLIB, Qt
+GCC, CMAKE, ZLIB, Qt, QuaZip (for linux users)
