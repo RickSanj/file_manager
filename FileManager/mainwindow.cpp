@@ -289,7 +289,12 @@ void MainWindow::on_langButton_clicked(){
 
     if (currentText == "ENG") {
         ui->label->setText("Path:");
-        if (translator.load("../../../ukrt.qm")) {
+#ifdef Q_OS_MAC
+        QString path = "../../../ukrt.qm";
+#else
+        QString path = "../../ukrt.qm";
+#endif
+        if (translator.load(path)) {
             qApp->installTranslator(&translator);
             ui->retranslateUi(this);
         }

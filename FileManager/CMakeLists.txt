@@ -64,16 +64,6 @@ install(TARGETS FileManager
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 target_link_libraries(FileManager PRIVATE Qt6::Widgets)
 
-#if (WIN32)
-#    target_link_libraries(FileManager PRIVATE ${QUALIB_DIR}/lib/quazip.dll
-#    )
-#else()
-#    target_link_libraries(FileManager PRIVATE
-#            Qt${QT_VERSION_MAJOR}::Widgets
-#            ${QUALIB_DIR}/lib/libquazip1-qt6.dylib
-#            ZLIB::ZLIB
-#    )
-#endif()
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(FileManager PRIVATE
             Qt${QT_VERSION_MAJOR}::Widgets
